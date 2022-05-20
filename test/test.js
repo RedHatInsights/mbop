@@ -91,7 +91,7 @@ describe('/POST /v1/users',() => {
 
 
 describe('/POST /v1/users',() => {
-    it.skip("should find users even without any parameter", (done) => {
+    it("should find users even without any parameter", (done) => {
         chai.request(url)
             .post('/v1/users')
             .end((err,res) => {

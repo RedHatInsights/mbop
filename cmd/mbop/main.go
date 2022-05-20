@@ -116,7 +116,7 @@ func findUsersBy(accountNo string, adminOnly string, status string, limit int, i
 				continue
 			}
 		}
-		if users != nil {
+		if users != nil && users.Users != nil {
 			found := false
 			for _, userCheck := range users.Users {
 				if userCheck == user.Username {
