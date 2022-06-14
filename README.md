@@ -57,11 +57,12 @@ user.
 
 ### How to run Locally
 
-It is recommended if you simply spin a container with a Keycloak server that imports the demo-realm. 
+It is recommended if you simply spin a container with a Keycloak server that imports the demo-realm.
 
 You can do it using rootless podman by running:
 
 ```shell
+
 podman run -it --name keycloak -p 8080:8080 \
     -e KEYCLOAK_ADMIN_USER=admin \
     -e KEYCLOAK_ADMIN_PASSWORD=change_me \
@@ -88,24 +89,43 @@ podman run -it --rm --name mbop -p 8090:8090 -e KEYCLOAK_SERVER='http://localhos
 
 You can also leverage the provided `podman-compose.yaml` template and run it all together:
 
+**PLEASE NOTE** : if SELINUX is enforced, you have to provide the `:z` label for the bind mount Realm file to import successfully.
+
 ```
+mv deployments/podman-compose-env deployments/.env
+
 podman-compose -f podman_compose.yaml up -d --build
 ```
 
 ## How to test ?
 
-
 ### Unit tests
 Simply run
 
 ```
-go test
+go test ./...
 ```
 
 ### E2E tests
 
-Having a local environment running with MBOP listening to `localhost:8090` , you can run Mocha tests with 
+setup a local environment running Keycloak and MBOP:
 
 ```
-$ npm test
+docker-compose -f deployments/compose.yaml up --build -d
+```
+
+**NOTE for podman-compose when SELINUX is enforced**: You'll have to set the `SELINUX_LABEL`
+environment variable from [deployments/compose.yaml](compose.yaml) to `:z` for the Keycloak
+Realm import to succeed. You can use the [deployments/podman-compose-env](podman-compose-env)
+file for that purpose.
+
+
+```
+podman-compose -f deployments/compose.yaml up -d
+```
+
+you can run Mocha tests with
+
+```
+# npm --prefix test test
 ```
