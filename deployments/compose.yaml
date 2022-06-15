@@ -1,7 +1,9 @@
 services:
   mbop:
     image: quay.io/cloudservices/mbop:${MBOP_IMAGE_TAG:-latest}
-    build: .
+    build:
+      context: ../
+      dockerfile: build/Dockerfile
     ports:
       - "8090:8090"
     environment:
@@ -19,5 +21,5 @@ services:
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/redhat-external-realm.json
     volumes:
       - type: bind
-        source: ${PWD}/data/redhat-external-realm.json
-        target: /opt/keycloak/data/import/redhat-external-realm.json:z
+        source: ${PWD}/test/data/redhat-external-realm.json
+        target: /opt/keycloak/data/import/redhat-external-realm.json${SELINUX_LABEL}
