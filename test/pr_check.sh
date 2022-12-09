@@ -17,3 +17,6 @@ cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
     <testcase classname="dummy" name="dummytest"/>
 </testsuite>
 EOF
+
+
+docker pull quay.io/app-sre/golang
