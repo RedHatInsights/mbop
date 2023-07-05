@@ -26,6 +26,8 @@ func sendJSON(w http.ResponseWriter, data any) {
 func sendJSONWithStatusCode(w http.ResponseWriter, data any, code int) {
 	b, _ := json.Marshal(data)
 
+	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(code)
 	_, err := w.Write(b)
 	if err != nil {
