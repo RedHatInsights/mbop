@@ -78,11 +78,11 @@ func (m *MBOPServer) findUsersBy(accountNo string, orgID string, adminOnly strin
 	for _, user := range usersList {
 
 		if adminOnly != "" {
-			onlyAdmin, err := strconv.ParseBool(adminOnly)
+			isAdminOnly, err := strconv.ParseBool(adminOnly)
 			if err != nil {
 				return nil, err
 			}
-			if onlyAdmin && !user.IsOrgAdmin {
+			if isAdminOnly && !user.IsOrgAdmin {
 				continue
 			}
 		}
