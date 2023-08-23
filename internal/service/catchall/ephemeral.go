@@ -76,14 +76,24 @@ func (m *MBOPServer) findUsersBy(accountNo string, orgID string, adminOnly strin
 
 	out := []models.User{}
 	for _, user := range usersList {
-		// When adminOnly is true, parameter “status” is ignored
-		if adminOnly == "true" && !user.IsOrgAdmin {
-			continue
+
+		if adminOnly != "" {
+			onlyAdmin, err := strconv.ParseBool(adminOnly)
+			if err != nil {
+				return nil, err
+			}
+			if onlyAdmin && !user.IsOrgAdmin {
+				continue
+			}
 		}
 
 		switch status {
-		case "disabled", "enabled", "all":
+		case "disabled":
 			if user.IsActive {
+				continue
+			}
+		case "enabled":
+			if !user.IsActive {
 				continue
 			}
 		}
