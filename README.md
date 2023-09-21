@@ -75,7 +75,7 @@ Then run MBOP, either building and running it locally:
 
 ```sh
 
-$ go build
+$ go build ./...
 
 $ KEYCLOAK_SERVER='http://localhost:8080' KEYCLOAK_USERNAME='admin' KEYCLOAK_PASSWORD='change_it' ./mbop
 ```

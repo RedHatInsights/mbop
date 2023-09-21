@@ -46,6 +46,10 @@ func SendEmails(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
+			if len(email.Recipients) == 0 {
+				email.Recipients = []string{config.Get().ToEmail}
+			}
+
 			err = sender.SendEmail(r.Context(), &email)
 			if err != nil {
 				l.Log.Error(err, "Error sending email", "email", email)
