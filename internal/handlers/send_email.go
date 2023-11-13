@@ -36,21 +36,42 @@ func SendEmails(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// The user might have wanted to override the sender that goes in the "from" field of the email.
+		var fromAddress string
+		if emails.EmailSender != "" {
+			fromAddress = emails.EmailSender
+		} else {
+			fromAddress = config.Get().FromEmail
+		}
+
 		for _, email := range emails.Emails {
 			// creating a copy in order to pass it down into sub-functions
 			email := email
 
-			err := mailer.LookupEmailsForUsernames(r.Context(), &email)
-			if err != nil {
-				l.Log.Error(err, "error translating usernames")
-				continue
+			// Lookup the emails for the given usernames unless the client specified otherwise.
+			if !emails.SkipUsersResolution {
+				err := mailer.LookupEmailsForUsernames(r.Context(), &email)
+				if err != nil {
+					l.Log.Error(err, "error translating usernames")
+					continue
+				}
+
+				if len(email.Recipients) == 0 {
+					email.Recipients = []string{config.Get().ToEmail}
+				}
 			}
 
+			// Should the user not specify any recipients, we need to determine if we should use the "default
+			// recipient" the user might have specified, or the default one that we set up in the configuration.
 			if len(email.Recipients) == 0 {
-				email.Recipients = []string{config.Get().ToEmail}
+				if emails.DefaultRecipient != "" {
+					email.Recipients = []string{emails.DefaultRecipient}
+				} else {
+					email.Recipients = []string{config.Get().ToEmail}
+				}
 			}
 
-			err = sender.SendEmail(r.Context(), &email)
+			err = sender.SendEmail(r.Context(), &email, fromAddress)
 			if err != nil {
 				l.Log.Error(err, "Error sending email", "email", email)
 			}

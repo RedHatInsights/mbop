@@ -11,7 +11,7 @@ import (
 )
 
 type Emailer interface {
-	SendEmail(ctx context.Context, email *models.Email) error
+	SendEmail(ctx context.Context, email *models.Email, fromAddress string) error
 }
 
 func NewMailer() (Emailer, error) {
