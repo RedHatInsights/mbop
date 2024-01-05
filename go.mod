@@ -17,6 +17,7 @@ require (
 	github.com/jackc/pgconn v1.12.0
 	github.com/openshift-online/ocm-sdk-go v0.1.311
 	github.com/pkg/errors v0.9.1
+	github.com/redhatinsights/app-common-go v1.6.7
 	github.com/redhatinsights/platform-go-middlewares v0.20.1-0.20230119152702-e3779317d1aa
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.21.0

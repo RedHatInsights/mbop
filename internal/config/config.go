@@ -3,6 +3,8 @@ package config
 import (
 	"os"
 	"strconv"
+
+	clowder "github.com/redhatinsights/app-common-go/pkg/api/v1"
 )
 
 type MbopConfig struct {
@@ -42,7 +44,7 @@ type MbopConfig struct {
 
 	StoreBackend     string
 	DatabaseHost     string
-	DatabasePort     string
+	DatabasePort     int
 	DatabaseUser     string
 	DatabasePassword string
 	DatabaseName     string
@@ -51,6 +53,7 @@ type MbopConfig struct {
 	TLSPort string
 	UseTLS  bool
 	CertDir string
+	TLSPath string
 }
 
 var conf *MbopConfig
@@ -66,10 +69,45 @@ func Get() *MbopConfig {
 	keyCloakTimeout, _ := strconv.ParseInt(fetchWithDefault("KEYCLOAK_TIMEOUT", "60"), 0, 64)
 	userServiceTimeout, _ := strconv.ParseInt(fetchWithDefault("KEYCLOAK_USER_SERVICE_TIMEOUT", "60"), 0, 64)
 
+	// old tls system, just using the cert provided by OCP
 	var tls bool
 	_, err := os.Stat(certDir + "/tls.crt")
 	if err == nil {
 		tls = true
+	}
+
+	// declaring these outside since clowder provides them
+	var (
+		dbHost     string
+		dbPort     int
+		dbUser     string
+		dbPassword string
+		dbName     string
+
+		listenerPort int
+		tlsPath      string
+	)
+
+	if clowder.IsClowderEnabled() {
+		cfg := clowder.LoadedConfig
+		dbHost = cfg.Database.Hostname
+		dbPort = cfg.Database.Port
+		dbUser = cfg.Database.Username
+		dbPassword = cfg.Database.Password
+		dbName = cfg.Database.Name
+
+		listenerPort = *cfg.PublicPort
+		if cfg.TlsCAPath != nil {
+			tlsPath = *cfg.TlsCAPath
+		}
+	} else {
+		dbHost = fetchWithDefault("DATABASE_HOST", "localhost")
+		dbPort, _ = strconv.Atoi(fetchWithDefault("DATABASE_PORT", "5432"))
+		dbUser = fetchWithDefault("DATABASE_USER", "postgres")
+		dbPassword = fetchWithDefault("DATABASE_PASSWORD", "")
+		dbName = fetchWithDefault("DATABASE_NAME", "mbop")
+
+		listenerPort, _ = strconv.Atoi(fetchWithDefault("PORT", "8090"))
 	}
 
 	c := &MbopConfig{
@@ -84,11 +122,11 @@ func Get() *MbopConfig {
 		SESSecretKey:    fetchWithDefault("SES_SECRET_KEY", ""),
 		DisableCatchall: disableCatchAll,
 
-		DatabaseHost:     fetchWithDefault("DATABASE_HOST", "localhost"),
-		DatabasePort:     fetchWithDefault("DATABASE_PORT", "5432"),
-		DatabaseUser:     fetchWithDefault("DATABASE_USER", "postgres"),
-		DatabasePassword: fetchWithDefault("DATABASE_PASSWORD", ""),
-		DatabaseName:     fetchWithDefault("DATABASE_NAME", "mbop"),
+		DatabaseHost:     dbHost,
+		DatabasePort:     dbPort,
+		DatabaseUser:     dbUser,
+		DatabasePassword: dbPassword,
+		DatabaseName:     dbName,
 		StoreBackend:     fetchWithDefault("STORE_BACKEND", "memory"),
 
 		CognitoAppClientID:     fetchWithDefault("COGNITO_APP_CLIENT_ID", ""),
@@ -115,10 +153,11 @@ func Get() *MbopConfig {
 		KeyCloakTokenGrantType:     fetchWithDefault("KEYCLOAK_TOKEN_GRANT_TYPE", "password"),
 		KeyCloakTokenClientID:      fetchWithDefault("KEYCLOAK_TOKEN_CLIENT_ID", "admin-cli"),
 
-		Port:    fetchWithDefault("PORT", "8090"),
+		Port:    strconv.Itoa(listenerPort),
 		TLSPort: fetchWithDefault("TLS_PORT", "8890"),
 		UseTLS:  tls,
 		CertDir: certDir,
+		TLSPath: tlsPath,
 	}
 
 	conf = c
