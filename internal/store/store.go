@@ -34,7 +34,7 @@ func SetupStore() error {
 func setupPostgresStore() (*postgresStore, error) {
 	c := config.Get()
 
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=prefer",
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=prefer",
 		c.DatabaseUser, c.DatabasePassword, c.DatabaseHost, c.DatabasePort, c.DatabaseName)
 
 	db, err := sql.Open("pgx", connStr)

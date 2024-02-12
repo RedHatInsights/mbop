@@ -1,0 +1,262 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: mbop
+objects:
+- apiVersion: cloud.redhat.com/v1alpha1
+  kind: ClowdApp
+  metadata:
+    name: mbop
+  spec:
+    envName: ${ENV_NAME}
+    deployments:
+    - name: svc
+      minReplicas: ${{MIN_REPLICAS}}
+      webServices:
+        public:
+          enabled: true
+      podSpec:
+        image: ${IMAGE}:${IMAGE_TAG}
+        env:
+        - name: JWK_URL
+          value: "${JWK_URL}"
+        - name: JWT_MODULE
+          value: "${JWT_MODULE}"
+        - name: KEYCLOAK_SERVER
+          value: "${KEYCLOAK_SCHEME}://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}${KEYCLOAK_PATH}"
+        - name: COGNITO_APP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ocm-app-client
+              key: client_id
+              optional: true
+        - name: COGNITO_APP_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ocm-app-client
+              key: client_secret
+              optional: true
+        - name: OAUTH_TOKEN_URL
+          value: ${OAUTH_TOKEN_URL}
+        - name: AMS_URL
+          value: ${AMS_URL}
+        - name: COGNITO_SCOPE
+          value: ${COGNITO_SCOPE}
+        - name: USERS_MODULE
+          value: ${USERS_MODULE}
+        - name: SES_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses
+              key: aws_access_key_id
+              optional: true
+        - name: SES_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses
+              key: aws_secret_access_key
+              optional: true
+        - name: SES_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses
+              key: aws_region
+              optional: true
+        - name: MAILER_MODULE
+          value: "${MAILER_MODULE}"
+        - name: FROM_EMAIL
+          value: "${FROM_EMAIL}"
+        - name: TOKEN_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rsa-token-gen
+              key: private-key
+              optional: true
+        - name: TOKEN_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rsa-token-gen
+              key: public-key
+              optional: true
+        - name: TOKEN_KID
+          valueFrom:
+            secretKeyRef:
+              name: rsa-token-gen
+              key: kid
+              optional: true
+        - name: TOKEN_TTL_DURATION
+          value: ${TOKEN_TTL_DURATION}
+        - name: STORE_BACKEND
+          value: ${STORE_BACKEND}
+        - name: DISABLE_CATCHALL
+          value: ${DISABLE_CATCHALL}
+        - name: IS_INTERNAL_LABEL
+          value: ${IS_INTERNAL_LABEL}
+        - name: DEBUG
+          value: ${DEBUG}
+        - name: KEYCLOAK_HOST
+          value: ${KEYCLOAK_HOST}
+        - name: KEYCLOAK_PORT
+          value: ${KEYCLOAK_PORT}
+        - name: KEYCLOAK_TIMEOUT
+          value: ${KEYCLOAK_TIMEOUT}
+        - name: KEYCLOAK_SCHEME
+          value: ${KEYCLOAK_SCHEME}
+        - name: KEYCLOAK_USER_SERVICE_HOST
+          value: ${KEYCLOAK_USER_SERVICE_HOST}
+        - name: KEYCLOAK_USER_SERVICE_PORT
+          value: ${KEYCLOAK_USER_SERVICE_PORT}
+        - name: KEYCLOAK_USER_SERVICE_SCHEME
+          value: ${KEYCLOAK_USER_SERVICE_SCHEME}
+        - name: KEYCLOAK_USER_SERVICE_TIMEOUT
+          value: ${KEYCLOAK_USER_SERVICE_TIMEOUT}
+        - name: KEYCLOAK_TOKEN_URL
+          value: ${KEYCLOAK_TOKEN_URL}
+        - name: KEYCLOAK_TOKEN_PATH
+          value: ${KEYCLOAK_TOKEN_PATH}
+        - name: KEYCLOAK_TOKEN_GRANT_TYPE
+          value: ${KEYCLOAK_TOKEN_GRANT_TYPE}
+        - name: KEYCLOAK_TOKEN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: username
+              optional: true
+        - name: KEYCLOAK_TOKEN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: password
+              optional: true
+        - name: KEYCLOAK_TOKEN_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: client_id
+              optional: true
+        resources:
+          limits:
+            cpu: ${CPU_LIMIT}
+            memory: ${MEMORY_LIMIT}
+          requests:
+            cpu: ${CPU_REQUEST}
+            memory: ${MEMORY_REQUEST}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+    database:
+      name: mbop
+      version: 14
+    inMemoryDb: false
+    featureFlags: false
+parameters:
+- name: MIN_REPLICAS
+  description: The number of replicas to use in the deployment
+  value: '1'
+- name: IMAGE_TAG
+  description: Image tag
+  required: true
+  value: latest
+- name: IMAGE
+  description: Image
+  required: true
+  value: quay.io/cloudservices/mbop
+- name: KEYCLOAK_SCHEME
+  description: keycloak's scheme (http/s)
+  value: http
+- name: KEYCLOAK_HOST
+  description: keycloak's host
+  value: 192.168.x.x
+- name: KEYCLOAK_PORT
+  description: keycloak's port
+  value: "12345"
+- name: KEYCLOAK_PATH
+  description: keycloak's path if behind a reverse proxy
+  value: ""
+- name: KEYCLOAK_TIMEOUT
+  description: keycloak client's timeout value
+  value: "10"
+- name: KEYCLOAK_USER_SERVICE_HOST
+  description: keycloak userservice's host
+  value: "localhost"
+- name: KEYCLOAK_USER_SERVICE_PORT
+  description: keycloak userservice's post
+  value: "8000"
+- name: KEYCLOAK_USER_SERVICE_SCHEME
+  description: keycloak userservice's scheme
+  value: "http"
+- name: KEYCLOAK_USER_SERVICE_TIMEOUT
+  description: keycloak userservice's timeout
+  value: "60"
+- name: KEYCLOAK_TOKEN_URL
+  description: host for keycloak token request
+  value: "http://localhost:8080/"
+- name: KEYCLOAK_TOKEN_PATH
+  description: path for keycloak token request
+  value: "realms/master/protocol/openid-connect/token"
+- name: KEYCLOAK_TOKEN_GRANT_TYPE
+  description: grant type value for keycloak token request
+  value: password
+- name: MEMORY_LIMIT
+  description: memory limit for mbop pod
+  value: 512Mi
+- name: MEMORY_REQUEST
+  description: memory request for mbop pod
+  value: 128Mi
+- name: CPU_LIMIT
+  description: cpu limit for mbop pod
+  value: "1"
+- name: CPU_REQUEST
+  description: cpu request for mbop pod
+  value: "0.5"
+- name: JWT_MODULE
+  description: optional JWT endpoint module override
+  value: ""
+- name: JWK_URL
+  description: optional JWK endpoint for use in JWT_MODULE implementations
+  value: ""
+- name: OAUTH_TOKEN_URL
+  description: AMS token url
+  value: ""
+- name: AMS_URL
+  description: AMS base url
+  value: ""
+- name: COGNITO_SCOPE
+  description: cognito scope value
+  value: ""
+- name: USERS_MODULE
+  description: optional USERS module override
+  value: ""
+- name: MAILER_MODULE
+  description: which module to use to send emails
+  value: "print"
+- name: FROM_EMAIL
+  description: where to send emails from via SES
+  value: "no-reply@redhat.com"
+- name: STORE_BACKEND
+  description: which store to use for satellite registrations
+  value: "memory"
+- name: TOKEN_TTL_DURATION
+  description: duration string (30s, 5m, 1h, etc) for token TTL
+  value: ""
+- name: DISABLE_CATCHALL
+  description: disable fallthrough to catchall handler
+  value: "false"
+- name: IS_INTERNAL_LABEL
+  description: OCM label to inform whether or not an account is internal
+  value: ""
+- name: DEBUG
+  description: Debug flag
+  value: "false"
+- name: CERT_DIR
+  description: the base directory where ssl certs are stored
+  value: "/certs"
+- name: ENV_NAME
+  required: true

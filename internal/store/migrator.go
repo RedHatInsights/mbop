@@ -22,7 +22,7 @@ func migrateDatabase() error {
 	}
 
 	c := config.Get()
-	connStr := fmt.Sprintf("pgx://%s:%s@%s:%s/%s?sslmode=prefer",
+	connStr := fmt.Sprintf("pgx://%s:%s@%s:%d/%s?sslmode=prefer",
 		c.DatabaseUser, c.DatabasePassword, c.DatabaseHost, c.DatabasePort, c.DatabaseName)
 
 	m, err := migrate.NewWithSourceInstance("iofs", fs, connStr)
