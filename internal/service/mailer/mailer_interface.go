@@ -24,6 +24,8 @@ func NewMailer() (Emailer, error) {
 		}
 
 		sender = &awsSESEmailer{client: sesv2.NewFromConfig(*cfg)}
+	case "mock":
+		sender = &MockEmailer{}
 	case "print":
 		sender = &printEmailer{}
 	default:
