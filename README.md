@@ -51,7 +51,7 @@ The current supported version of Keycloak is: `15.0.2` , based on the
 [Keycloak version that Clowder uses](https://github.com/RedHatInsights/clowder/blob/983f993067b6ffbed85c7a7a85ee521019f19258/controllers/cloud.redhat.com/providers/web/impl.go#L23)
 
 You will also need a valid Keycloak realm named `redhat-external` as MBOP expects it to be
-pre-created. There's a [realm template](./data/redhat-external-realm.json) you can import to
+pre-created. There's a [realm template](./test/data/redhat-external-realm.json) you can import to
 your Keycloak server to help you get started, it defines the redhat-external realm and a test
 user.
 
@@ -67,8 +67,8 @@ podman run -it --name keycloak -p 8080:8080 \
     -e KEYCLOAK_ADMIN_USER=admin \
     -e KEYCLOAK_ADMIN_PASSWORD=change_me \
     -e KEYCLOAK_IMPORT=/opt/keycloak/data/import/redhat-external-realm.json \
-    -v ${PWD}/data/redhat-external-realm.json:/opt/keycloak/data/import/redhat-external-realm.json:z \
-    quay.io/keycloak/keycloak:15:0.2
+    -v ${PWD}/test/data/redhat-external-realm.json:/opt/keycloak/data/import/redhat-external-realm.json:z \
+    quay.io/keycloak/keycloak:15.0.2
 ```
 
 Then run MBOP, either building and running it locally:
