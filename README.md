@@ -124,7 +124,7 @@ file for that purpose.
 podman-compose -f deployments/compose.yaml up -d
 ```
 
-you can run Mocha tests with
+you can run Mocha tests with:
 
 ```
 # npm --prefix test test
