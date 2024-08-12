@@ -22,7 +22,7 @@ get_container_engine() {
 }
 
 success_entry_found() {
-  grep -Pq "$SUCCESS_LOG_ENTRY" <<<"$("$CONTAINER_ENGINE" -f "$COMPOSE_FILE" logs "$CONTAINER_NAME" 2>/dev/null)"
+  grep -Pq "$SUCCESS_LOG_ENTRY" <<<"$("$CONTAINER_ENGINE" compose -f "$COMPOSE_FILE" logs "$CONTAINER_NAME" 2>/dev/null)"
 }
 
 init_checks() {
@@ -47,7 +47,7 @@ wait_for() {
     sleep 1
 
     if [[ $((SECONDS - START_SECONDS)) -gt $TIMEOUT ]]; then
-      "$CONTAINER_ENGINE" compose -f "$COMPOSE_FILE" logs "$CONTAINER_NAME"
+        "$CONTAINER_ENGINE" compose -f "$COMPOSE_FILE" logs "$CONTAINER_NAME"
       echo "$CONTAINER_NAME failed to reach ready status under $TIMEOUT seconds"
       return 1
     fi
