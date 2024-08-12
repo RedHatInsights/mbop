@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: 18
       - name: Setup E2E testing environment
-        run: docker-compose -f deployments/compose.yaml up -d --build
+        run: docker compose -f deployments/compose.yaml up -d --build
       - name: Wait for Keycloak import to complete
         run: deployments/wait_for_keycloak_import.sh deployments/compose.yaml
       - name: Install test environment
