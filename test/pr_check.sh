@@ -18,11 +18,8 @@ REF_ENV="insights-stage"
 NAMESPACE_POOL="default"
 
 # Install bonfire repo/initialize
-CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
-curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
-
-# unit tests handled by gh actions ...
-#source $CICD_ROOT/unit_test.sh
+CICD_URL=https://raw.githubusercontent.com/RedHatInsights/cicd-tools/main/bootstrap.sh
+curl -s "$CICD_URL" > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Build pr check quay image
 source $CICD_ROOT/build.sh
