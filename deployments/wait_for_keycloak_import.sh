@@ -2,7 +2,7 @@
 
 COMPOSE_FILE="$1"
 CONTAINER_NAME="keycloak"
-COMPOSE_COMMAND=""
+CONTAINER_ENGINE=""
 SUCCESS_LOG_ENTRY="Keycloak.*started in \d+ms"
 START_SECONDS="$SECONDS"
 TIMEOUT="60"
@@ -11,16 +11,18 @@ command_exists() {
   command -v "$1" >/dev/null
 }
 
-set_compose_command() {
-  if command_exists "docker-compose"; then
-    echo "docker-compose"
-  elif command_exists "podman-compose"; then
-    echo "podman-compose"
+get_container_engine() {
+  if command_exists "docker"; then
+    echo -n "docker"
+  elif command_exists "podman"; then
+    echo -n "podman"
+  else
+    return 1
   fi
 }
 
 success_entry_found() {
-  grep -Pq "$SUCCESS_LOG_ENTRY" <<< "$("$COMPOSE_COMMAND" -f "$COMPOSE_FILE" logs "$CONTAINER_NAME" 2>/dev/null)"
+  grep -Pq "$SUCCESS_LOG_ENTRY" <<<"$("$CONTAINER_ENGINE" -f "$COMPOSE_FILE" logs "$CONTAINER_NAME" 2>/dev/null)"
 }
 
 init_checks() {
@@ -30,14 +32,11 @@ init_checks() {
     return 1
   fi
 
-  COMPOSE_COMMAND="$(set_compose_command)"
-
-  if [ -z "$COMPOSE_COMMAND" ]; then
+  if ! CONTAINER_ENGINE="$(get_container_engine)"; then
     echo "cannot find either docker-compose nor podman-compose in PATH"
     return 1
   fi
 }
-
 
 wait_for() {
 
@@ -47,16 +46,15 @@ wait_for() {
     echo -n '.'
     sleep 1
 
-    if [[ $(( SECONDS - START_SECONDS )) -gt $TIMEOUT ]]; then
-      "$COMPOSE_COMMAND" -f "$COMPOSE_FILE" logs "$CONTAINER_NAME"
+    if [[ $((SECONDS - START_SECONDS)) -gt $TIMEOUT ]]; then
+      "$CONTAINER_ENGINE" compose -f "$COMPOSE_FILE" logs "$CONTAINER_NAME"
       echo "$CONTAINER_NAME failed to reach ready status under $TIMEOUT seconds"
       return 1
     fi
   done
 
-  echo -e "\n Took $(( SECONDS - START_SECONDS )) seconds"
+  echo -e "\n Took $((SECONDS - START_SECONDS)) seconds"
 }
 
 init_checks || exit 1
 wait_for || exit 1
-
