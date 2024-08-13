@@ -482,6 +482,43 @@ func (m *MBOPServer) usersV2V3Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, string(str))
 }
 
+func (m *MBOPServer) usersV3Handler(w http.ResponseWriter, r *http.Request) {
+	urlParts := strings.Split(strings.TrimPrefix(r.URL.Path, "/"), "/")
+	orgID := urlParts[2]
+	adminOnly := r.URL.Query().Get("admin_only")
+	status := r.URL.Query().Get("status")
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		limit = 0
+	}
+
+	obj := &usersByInput{}
+	data, err := io.ReadAll(r.Body)
+	if err != nil {
+		return
+	}
+	if len(data) > 0 {
+		err = json.Unmarshal(data, obj)
+		if err != nil {
+			return
+		}
+	}
+
+	users, err := m.findUsersBy("", orgID, adminOnly, status, limit, "", "", obj, nil)
+
+	if err != nil {
+		http.Error(w, "could not get response", http.StatusInternalServerError)
+		return
+	}
+	str, err := json.Marshal(users)
+	if err != nil {
+		http.Error(w, "could not create response", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprint(w, string(str))
+}
+
 func (m *MBOPServer) entitlements(w http.ResponseWriter, r *http.Request) {
 	allPass := os.Getenv("ALL_PASS")
 
@@ -537,6 +574,8 @@ func (m *MBOPServer) MainHandler(w http.ResponseWriter, r *http.Request) {
 		m.usersV1Handler(w, r)
 	case r.URL.Path[:12] == "/v2/accounts":
 		m.usersV2V3Handler(w, r)
+	case r.URL.Path[:12] == "/v3/accounts" && r.URL.Path[len(r.URL.Path)-7:] == "usersBy":
+		m.usersV3Handler(w, r)
 	case r.URL.Path[:12] == "/v3/accounts":
 		m.usersV2V3Handler(w, r)
 	case r.URL.Path == "/api/entitlements/v1/services":

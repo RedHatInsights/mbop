@@ -8,21 +8,21 @@ IMAGE="quay.io/cloudservices/mbop"  # the image location on quay
 
 APP_NAME="rbac"  # name of app-sre "application" folder this component lives in
 COMPONENT_NAME="rbac"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
-IQE_PLUGINS="rbac,rbac_frontend"  # name of the IQE plugin for this APP
-IQE_FILTER_EXPRESSION="test_permissions_sanity or test_mua_navigate"  # expression passed to pytest '-k'
+IQE_IMAGE_TAG="bop" # image tag to use for IQE pod, leave unset to use ClowdApp's iqePlugin value
+IQE_PLUGINS="bop"  # name of the IQE plugin for this APP
+IQE_FILTER_EXPRESSION=""  # expression passed to pytest '-k'
+IQE_MARKER_EXPRESSION=""  # This is the value passed to pytest -m
+IQE_TEST_IMPORTANCE="critical" # This is the value passed to iqe --testImportance
 IQE_CJI_TIMEOUT="10m"  # This is the time to wait for smoke test to complete or fail
-DEPLOY_FRONTENDS="true"
-IQE_SELENIUM="true"
+DEPLOY_FRONTENDS="false"
+IQE_SELENIUM="false"
 IQE_ENV="ephemeral"
 REF_ENV="insights-stage"
 NAMESPACE_POOL="default"
 
 # Install bonfire repo/initialize
-CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
-curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
-
-# unit tests handled by gh actions ...
-#source $CICD_ROOT/unit_test.sh
+CICD_URL=https://raw.githubusercontent.com/RedHatInsights/cicd-tools/main/bootstrap.sh
+curl -s "$CICD_URL" > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 
 # Build pr check quay image
 source $CICD_ROOT/build.sh
@@ -55,5 +55,5 @@ CLOWDENV_NAME="env-$NAMESPACE"
 kubectl patch clowdenvironment ${CLOWDENV_NAME} --type='merge' -p '{"spec":{"providers":{"web":{"images":{"mockBop":"'${IMAGE}:${IMAGE_TAG}'"}}}}}'
 kubectl rollout status deployment/${CLOWDENV_NAME}-mbop -n $NAMESPACE
 
-# Run rbac test
+# Run iqe test
 source $CICD_ROOT/cji_smoke_test.sh

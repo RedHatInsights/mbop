@@ -21,14 +21,14 @@ mkdir -p "$DOCKER_CONF"
 docker --config="$DOCKER_CONF" login -u="$QUAY_USER" -p="$QUAY_TOKEN" quay.io
 docker --config="$DOCKER_CONF" login -u="$RH_REGISTRY_USER" -p="$RH_REGISTRY_TOKEN" registry.redhat.io
 docker --config="$DOCKER_CONF" build -t "${IMAGE}:${IMAGE_TAG}" .
-docker --config="$DOCKER_CONF" push "${IMAGE}:${IMAGE_TAG}"
 
 if [[ $GIT_BRANCH == *"master"* ]]; then
+    docker --config="$DOCKER_CONF" push "${IMAGE}:${IMAGE_TAG}"
     docker tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:latest"
     docker push "${IMAGE}:latest"
 fi
 
-if [[ $GIT_BRANCH == *"security-compliance"* ]]; then
+if [[ "$GIT_BRANCH" == "origin/security-compliance" ]]; then
     docker --config="$DOCKER_CONF" tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${SECURITY_COMPLIANCE_TAG}"
     docker --config="$DOCKER_CONF" push "${IMAGE}:${SECURITY_COMPLIANCE_TAG}"
 fi

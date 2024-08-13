@@ -53,9 +53,9 @@ func main() {
 		r.Delete("/v1/registrations/{uid}", handlers.RegistrationDeleteHandler)
 		r.Get("/v1/registrations/token", handlers.TokenHandler)
 
-		r.Get("/v1/allowlist", handlers.AllowlistListHandler)
-		r.Post("/v1/allowlist", handlers.AllowlistCreateHandler)
-		r.Delete("/v1/allowlist", handlers.AllowlistDeleteHandler)
+		r.Get("/api/mbop/v1/allowlist", handlers.AllowlistListHandler)
+		r.Post("/api/mbop/v1/allowlist", handlers.AllowlistCreateHandler)
+		r.Delete("/api/mbop/v1/allowlist", handlers.AllowlistDeleteHandler)
 	})
 
 	err := mailer.InitConfig()

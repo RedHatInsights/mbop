@@ -67,7 +67,7 @@ func AllowlistDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	block := r.URL.Query().Get("block")
 	if block == "" {
-		do400(w, "need address in path in the form `/v1/allowlist?block={block}")
+		do400(w, "need address in path in the form `/api/v1/allowlist?block={block}")
 		return
 	}
 
