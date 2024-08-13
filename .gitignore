@@ -220,3 +220,5 @@ mbop
 !cmd/mbop
 # PR check artifacts
 artifacts
+
+.vscode
