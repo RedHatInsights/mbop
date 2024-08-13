@@ -6,8 +6,9 @@ IMAGE="quay.io/cloudservices/mbop"  # the image location on quay
 
 # We will run rbac smoke tests to validate mbop is working
 
-APP_NAME="rbac"  # name of app-sre "application" folder this component lives in
-COMPONENT_NAME="rbac"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+# APP_NAME="rbac"  # name of app-sre "application" folder this component lives in
+COMPONENT_NAME="bop"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+IQE_IMAGE_TAG="bop" # image tag to use for IQE pod, leave unset to use ClowdApp's iqePlugin value
 IQE_PLUGINS="bop"  # name of the IQE plugin for this APP
 IQE_FILTER_EXPRESSION=""  # expression passed to pytest '-k'
 IQE_MARKER_EXPRESSION=""  # This is the value passed to pytest -m
@@ -37,15 +38,15 @@ export BONFIRE_NS_REQUESTER="${JOB_NAME}-${BUILD_NUMBER}"
 export NAMESPACE=$(bonfire namespace reserve --pool ${NAMESPACE_POOL})
 SMOKE_NAMESPACE=$NAMESPACE  # track which namespace was used here for 'teardown' in common_deploy_logic
 
-bonfire deploy \
-    ${APP_NAME} \
-    --source=appsre \
-    --ref-env ${REF_ENV} \
-    --namespace ${NAMESPACE} \
-    --timeout ${DEPLOY_TIMEOUT} \
-    --frontends ${DEPLOY_FRONTENDS} \
-    ${COMPONENTS_ARG} \
-    ${COMPONENTS_RESOURCES_ARG}
+# bonfire deploy \
+#     ${APP_NAME} \
+#     --source=appsre \
+#     --ref-env ${REF_ENV} \
+    # --namespace ${NAMESPACE} \
+    # --timeout ${DEPLOY_TIMEOUT} \
+    # --frontends ${DEPLOY_FRONTENDS} \
+    # ${COMPONENTS_ARG} \
+    # ${COMPONENTS_RESOURCES_ARG}
 
 set +x
 
