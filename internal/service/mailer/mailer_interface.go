@@ -11,7 +11,7 @@ import (
 )
 
 type Emailer interface {
-	SendEmail(ctx context.Context, email *models.Email) error
+	SendEmail(ctx context.Context, email *models.Email, fromAddress string) error
 }
 
 func NewMailer() (Emailer, error) {
@@ -24,6 +24,8 @@ func NewMailer() (Emailer, error) {
 		}
 
 		sender = &awsSESEmailer{client: sesv2.NewFromConfig(*cfg)}
+	case "mock":
+		sender = &MockEmailer{}
 	case "print":
 		sender = &printEmailer{}
 	default:
