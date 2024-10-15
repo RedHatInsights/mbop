@@ -176,9 +176,9 @@ func (p *postgresStore) AllowedIP(ip string, orgID string) (bool, error) {
 	// turns out postgres can do this on the backend! see old code that accomplishes the same thing at commit dca8f2c
 
 	// basically its doing a subquery selecting all blocks from the org or
-	// gateway and then shoving them into an array and checking if the ip exists
-	// in those blocks.
-	row := p.db.QueryRow(`select $1::inet << any(array(select ip_block from allowlist where org_id = $2)::inet[])`, ip, orgID)
+	// 'system' (old hardcoded ones) and then shoving them into an array and
+	// checking if the ip exists in those blocks.
+	row := p.db.QueryRow(`select $1::inet << any(array(select ip_block from allowlist where org_id = $2 or org_id = 'system')::inet[])`, ip, orgID)
 
 	var valid bool
 	err := row.Scan(&valid)

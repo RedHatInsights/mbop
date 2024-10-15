@@ -294,3 +294,25 @@ func (suite *TestSuite) TestIPAllowedHappyMultiple() {
 		suite.Nil(err)
 	}
 }
+
+func (suite *TestSuite) TestIPAllowedWithSystem() {
+	config.Reset()
+	defer config.Reset()
+	os.Setenv("ALLOWLIST_ENABLED", "true")
+	defer os.Setenv("ALLOWLIST_ENABLED", "false")
+
+	suite.Nil(suite.store.AllowAddress(&AllowlistBlock{
+		IPBlock: "10.0.0.1/24",
+		OrgID:   "1234",
+	}))
+	suite.Nil(suite.store.AllowAddress(&AllowlistBlock{
+		IPBlock: "192.168.1.1/24",
+		OrgID:   "system",
+	}))
+
+	for _, ip := range []string{"10.0.0.100", "192.168.1.100", "10.0.0.20/32", "192.168.1.20/32"} {
+		allowed, err := suite.store.AllowedIP(ip, "1234")
+		suite.True(allowed)
+		suite.Nil(err)
+	}
+}
