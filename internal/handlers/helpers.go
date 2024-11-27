@@ -136,13 +136,13 @@ func getUsernamesFromRequestBody(r *http.Request) (models.UserBody, error) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return usernames, fmt.Errorf("failed to read request body: " + err.Error())
+		return usernames, fmt.Errorf("failed to read request body: %w", err)
 	}
 	defer r.Body.Close()
 
 	err = json.Unmarshal(body, &usernames)
 	if err != nil {
-		return usernames, fmt.Errorf("failed to parse request body: " + err.Error() + ", request must include 'users': [] ")
+		return usernames, fmt.Errorf("failed to parse request body: %w, request must include 'users': [] ", err)
 	}
 
 	return usernames, nil
@@ -153,14 +153,14 @@ func getUsersByBody(r *http.Request) (models.UsersByBody, error) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return usersByBody, fmt.Errorf("failed to read request body: " + err.Error())
+		return usersByBody, fmt.Errorf("failed to read request body: %w", err)
 	}
 
 	defer r.Body.Close()
 
 	err = json.Unmarshal(body, &usersByBody)
 	if err != nil {
-		return usersByBody, fmt.Errorf("failed to parse request body: " + err.Error())
+		return usersByBody, fmt.Errorf("failed to parse request body: %w", err)
 	}
 
 	return usersByBody, nil
@@ -179,7 +179,7 @@ func getSortOrder(r *http.Request) (string, error) {
 		return r.URL.Query().Get("sortOrder"), nil
 	}
 
-	return "", fmt.Errorf("sortOrder must be one of '', " + strings.Join(validSortOrder, ", "))
+	return "", fmt.Errorf("sortOrder must be one of '', %s", strings.Join(validSortOrder, ", "))
 }
 
 func getQueryBy(r *http.Request) (string, error) {
@@ -193,7 +193,7 @@ func getQueryBy(r *http.Request) (string, error) {
 			return "organizationId", nil
 		}
 	} else {
-		return "", fmt.Errorf("queryBy must be one of " + strings.Join(validQueryBy, ", "))
+		return "", fmt.Errorf("queryBy must be one of %s", strings.Join(validQueryBy, ", "))
 	}
 
 	return "", nil
@@ -208,7 +208,7 @@ func getAdminOnly(r *http.Request) (bool, error) {
 		return false, nil
 	}
 
-	return false, fmt.Errorf("admin_only must be one of " + strings.Join(validSortOrder, ", "))
+	return false, fmt.Errorf("admin_only must be one of %s", strings.Join(validSortOrder, ", "))
 }
 
 func getLimit(r *http.Request) (int, error) {
