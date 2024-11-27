@@ -156,7 +156,7 @@ func (m *MBOPServer) jwtHandler(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, resp.PublicKey)
+	fmt.Fprint(w, resp.PublicKey)
 }
 
 func (m *MBOPServer) getJWT(realm string) (*JSONStruct, error) {
