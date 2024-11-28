@@ -3,7 +3,7 @@ package keycloakuserservice
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -108,7 +108,7 @@ func (userService *UserServiceClient) sendKeycloakGetRequest(url *url.URL, token
 		return responseBody, err
 	}
 
-	responseBody, err = ioutil.ReadAll(resp.Body)
+	responseBody, err = io.ReadAll(resp.Body)
 	if err != nil {
 		l.Log.Error(err, "error reading keycloak response body")
 		return responseBody, err
