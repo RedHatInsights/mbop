@@ -23,9 +23,9 @@ jobs:
 
     steps:
       - uses: actions/setup-go@v5
-        name: Set up golang 1.18
+        name: Set up golang 1.19
         with:
-          go-version: '1.18.4'
+          go-version: '1.19.13'
       - name: Check out source code
         uses: actions/checkout@v4
       - name: Run Tests

@@ -3,7 +3,7 @@ package keycloak
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -41,7 +41,7 @@ func (keycloak *Client) GetAccessToken() (string, error) {
 
 	defer resp.Body.Close()
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", fmt.Errorf("error reading keycloak token response body: %s", err)
 	}
