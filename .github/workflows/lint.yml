@@ -1,39 +1,31 @@
-name: Go
+name: Golang Lint
 
 on:
   - pull_request
 
 permissions:
   contents: read
-  # Optional: allow read access to pull request.  Use with 'only-new-issues' option.
+  # Optional: allow read access to pull request. Use with `only-new-issues` option.
   # pull-requests: read
+
 jobs:
   golangci:
-    name: Lint
+    name: golangci-lint
     runs-on: ubuntu-latest
     steps:
-      - name: Display build environment
-        run: printenv
-
-      - uses: actions/setup-go@v5
-        name: Set up Go 1.x
-        with:
-          go-version: 1.19
-
       - uses: actions/checkout@v4
-        name: Checkout mbop
-
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+      - uses: actions/setup-go@v5
         with:
-          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+          go-version: stable
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
           version: latest
-
           args: >
             --enable=errcheck,gocritic,gofmt,goimports,gosec,gosimple,govet,ineffassign,revive,staticcheck,typecheck,unused,bodyclose
             --fix=false
             --max-same-issues=20
-            --out-${NO_FUTURE}format=colored-line-number
+            --out-format=colored-line-number
             --print-issued-lines=true
             --print-linter-name=true
             --sort-results=true
