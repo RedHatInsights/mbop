@@ -1,6 +1,6 @@
 module github.com/redhatinsights/mbop
 
-go 1.19
+go 1.20
 
 require (
 	github.com/RedHatInsights/jwk2pem v0.0.0-20230131125756-f780f7dad7d8
