@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"net"
 	"os"
 	"sort"
 	"strconv"
@@ -263,6 +264,11 @@ func (m *MBOPServer) usersV1(w http.ResponseWriter, r *http.Request) {
 	filt := &V1UserInput{}
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			fmt.Printf("\n\nRequest timed out: %s\n\n", err.Error())
+		} else {
+		fmt.Printf("\n\n%s\n\n", err.Error())
+		}
 		http.Error(w, "malformed input", http.StatusInternalServerError)
 		return
 	}
@@ -309,9 +315,13 @@ type usersSpec struct {
 func (m *MBOPServer) getUsers() (users []models.User, err error) {
 	resp, err := m.Client.Get(m.getURL("/auth/admin/realms/redhat-external/users", map[string]string{"max": "2000"}))
 	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			fmt.Printf("\n\nRequest timed out: %s\n\n", err.Error())
+		} else {
 		fmt.Printf("\n\n%s\n\n", err.Error())
 	}
-
+	}
+	
 	defer resp.Body.Close()
 
 	obj := &[]usersSpec{}
