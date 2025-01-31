@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
-	"net"
 	"os"
 	"sort"
 	"strconv"
@@ -164,10 +164,24 @@ func (m *MBOPServer) getJWT(realm string) (*JSONStruct, error) {
 	resp, err := http.Get(m.getURL(fmt.Sprintf("/auth/realms/%s/", realm)))
 
 	if err != nil {
+		if netErr, ok := err.(*net.OpError); ok && netErr.Timeout() {
+			fmt.Printf("\n\nKeycloak server could not be reached or is down, Request timed out: %s\n\n", err.Error())
+		} else if netErr, ok := err.(*net.OpError); ok && netErr.Op == "dial" && netErr.Err.Error() == "connection refused" {
+			fmt.Printf("\n\nKeycloak server connection refused, keycloak server is down: %s\n\n", err.Error())
+		} else if _, ok := err.(*net.DNSError); ok {
+			fmt.Printf("\n\nKeycloak server connection refused, DNS error occurred: %s\n\n", err.Error())
+		} else {
+			fmt.Printf("\n\nUnexpected error occurred when trying to connect to Keycloak server %s\n\n", err.Error())
+		}
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	} else {
+		fmt.Println("Recieved an empty response from the keycloak server.")
+		return nil, err
+	}
 
 	bdata, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -217,10 +231,24 @@ func (m *MBOPServer) getUser(_ http.ResponseWriter, r *http.Request) (*models.Us
 	resp, err := k.Get(m.getURL("/auth/realms/redhat-external/account/"))
 
 	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			fmt.Printf("\n\nKeycloak server could not be reached or is down, Request timed out: %s\n\n", err.Error())
+		} else if opErr, ok := err.(*net.OpError); ok && opErr.Op == "dial" && opErr.Err.Error() == "connection refused" {
+			fmt.Printf("\n\nKeycloak server connection refused, keycloak server is down: %s\n\n", err.Error())
+		} else if _, ok := err.(*net.DNSError); ok {
+			fmt.Printf("\n\nKeycloak server connection refused, DNS error occurred: %s\n\n", err.Error())
+		} else {
+			fmt.Printf("\n\n%s\n\n", err.Error())
+		}
 		return &models.User{}, fmt.Errorf("couldn't auth user: %s", err.Error())
 	}
 
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	} else {
+		fmt.Println("Recieved an empty response from the keycloak server.")
+		return nil, err
+	}
 
 	if resp.StatusCode != 200 {
 		return &models.User{}, fmt.Errorf("user unauthorized: %d", resp.StatusCode)
@@ -265,9 +293,13 @@ func (m *MBOPServer) usersV1(w http.ResponseWriter, r *http.Request) {
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-			fmt.Printf("\n\nRequest timed out: %s\n\n", err.Error())
+			fmt.Printf("\n\nKeycloak server could not be reached or is down, Request timed out: %s\n\n", err.Error())
+		} else if opErr, ok := err.(*net.OpError); ok && opErr.Op == "dial" && opErr.Err.Error() == "connection refused" {
+			fmt.Printf("\n\nKeycloak server connection refused, keycloak server is down: %s\n\n", err.Error())
+		} else if _, ok := err.(*net.DNSError); ok {
+			fmt.Printf("\n\nKeycloak server connection refused, DNS error occurred: %s\n\n", err.Error())
 		} else {
-		fmt.Printf("\n\n%s\n\n", err.Error())
+			fmt.Printf("\n\n%s\n\n", err.Error())
 		}
 		http.Error(w, "malformed input", http.StatusInternalServerError)
 		return
@@ -316,13 +348,22 @@ func (m *MBOPServer) getUsers() (users []models.User, err error) {
 	resp, err := m.Client.Get(m.getURL("/auth/admin/realms/redhat-external/users", map[string]string{"max": "2000"}))
 	if err != nil {
 		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-			fmt.Printf("\n\nRequest timed out: %s\n\n", err.Error())
+			fmt.Printf("\n\nKeycloak server could not be reached or is down, Request timed out: %s\n\n", err.Error())
+		} else if opErr, ok := err.(*net.OpError); ok && opErr.Op == "dial" && opErr.Err.Error() == "connection refused" {
+			fmt.Printf("\n\nKeycloak server connection refused, keycloak server is down: %s\n\n", err.Error())
+		} else if _, ok := err.(*net.DNSError); ok {
+			fmt.Printf("\n\nKeycloak server connection refused, DNS error occurred: %s\n\n", err.Error())
 		} else {
-		fmt.Printf("\n\n%s\n\n", err.Error())
+			fmt.Printf("\n\n%s\n\n", err.Error())
+		}
 	}
+
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	} else {
+		fmt.Println("Recieved an empty response from the keycloak server.")
+		return nil, err
 	}
-	
-	defer resp.Body.Close()
 
 	obj := &[]usersSpec{}
 
