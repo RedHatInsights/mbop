@@ -179,7 +179,7 @@ func (m *MBOPServer) getJWT(realm string) (*JSONStruct, error) {
 	if resp != nil && resp.Body != nil {
 		defer resp.Body.Close()
 	} else {
-		fmt.Println("Recieved an empty response from the keycloak server.")
+		fmt.Println("Received an empty response from the keycloak server.")
 		return nil, err
 	}
 
@@ -246,7 +246,7 @@ func (m *MBOPServer) getUser(_ http.ResponseWriter, r *http.Request) (*models.Us
 	if resp != nil && resp.Body != nil {
 		defer resp.Body.Close()
 	} else {
-		fmt.Println("Recieved an empty response from the keycloak server.")
+		fmt.Println("Received an empty response from the keycloak server.")
 		return nil, err
 	}
 
@@ -361,7 +361,7 @@ func (m *MBOPServer) getUsers() (users []models.User, err error) {
 	if resp != nil && resp.Body != nil {
 		defer resp.Body.Close()
 	} else {
-		fmt.Println("Recieved an empty response from the keycloak server.")
+		fmt.Println("Received an empty response from the keycloak server.")
 		return nil, err
 	}
 
