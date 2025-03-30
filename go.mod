@@ -17,9 +17,9 @@ require (
 	github.com/jackc/pgconn v1.14.3
 	github.com/openshift-online/ocm-sdk-go v0.1.460
 	github.com/pkg/errors v0.9.1
-	github.com/redhatinsights/platform-go-middlewares v0.20.1-0.20230119152702-e3779317d1aa
+	github.com/redhatinsights/platform-go-middlewares/v2 v2.0.0-beta.2
 	github.com/stretchr/testify v1.9.0
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.26.0
 	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
 	golang.org/x/oauth2 v0.15.0
 )
@@ -75,7 +75,7 @@ require (
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect

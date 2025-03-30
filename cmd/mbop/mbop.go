@@ -9,7 +9,7 @@ import (
 
 	"github.com/redhatinsights/mbop/internal/config"
 	"github.com/redhatinsights/mbop/internal/service/mailer"
-	"github.com/redhatinsights/platform-go-middlewares/identity"
+	"github.com/redhatinsights/platform-go-middlewares/v2/identity"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/handlers"
