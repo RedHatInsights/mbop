@@ -13,7 +13,7 @@ require (
 	github.com/go-logr/zapr v1.2.3
 	github.com/golang-jwt/jwt/v5 v5.0.0-rc.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgconn v1.14.3
 	github.com/openshift-online/ocm-sdk-go v0.1.460
 	github.com/pkg/errors v0.9.1
