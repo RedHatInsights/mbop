@@ -1,6 +1,8 @@
 module github.com/redhatinsights/mbop
 
-go 1.22
+go 1.23.0
+
+toolchain go1.23.8
 
 require (
 	github.com/RedHatInsights/jwk2pem v0.0.0-20230131125756-f780f7dad7d8
@@ -79,7 +81,7 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
