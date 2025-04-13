@@ -15,7 +15,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgconn v1.14.3
-	github.com/openshift-online/ocm-sdk-go v0.1.460
+	github.com/openshift-online/ocm-sdk-go v0.1.465
 	github.com/pkg/errors v0.9.1
 	github.com/redhatinsights/platform-go-middlewares v0.20.1-0.20230119152702-e3779317d1aa
 	github.com/stretchr/testify v1.9.0
@@ -41,7 +41,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
