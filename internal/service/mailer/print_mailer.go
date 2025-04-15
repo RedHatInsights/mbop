@@ -12,19 +12,20 @@ type printEmailer struct{}
 
 var _ = (Emailer)(&printEmailer{})
 
-func (p printEmailer) SendEmail(_ context.Context, email *models.Email) error {
+func (p printEmailer) SendEmail(_ context.Context, email *models.Email, fromAddress string) error {
 	l := 50
 	if len(email.Body) < 50 {
 		l = len(email.Body)
 	}
 
-	fmt.Printf(`To: %v
+	fmt.Printf(`From: %v
+To: %v
 CC: %v
 BCC: %v
 Subject: %v
 BodyType: %v
 Message: %v...(truncated to 50 chars)
-`, email.Recipients, email.CcList, email.BccList, email.Subject, email.BodyType, email.Body[:l])
+`, fromAddress, email.Recipients, email.CcList, email.BccList, email.Subject, email.BodyType, email.Body[:l])
 
 	return nil
 }
