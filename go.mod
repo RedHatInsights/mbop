@@ -23,7 +23,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
-	golang.org/x/oauth2 v0.15.0
+	golang.org/x/oauth2 v0.27.0
 )
 
 require (
