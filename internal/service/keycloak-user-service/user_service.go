@@ -45,7 +45,7 @@ func (userService *UserServiceClient) GetUsers(token string, u models.UserBody, 
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse.Users), err
+	return keycloakResponseToUsers(unmarshaledResponse), err
 }
 
 func (userService *UserServiceClient) GetAccountV3Users(orgID string, token string, q models.UserV3Query) (models.Users, error) {
@@ -67,7 +67,7 @@ func (userService *UserServiceClient) GetAccountV3Users(orgID string, token stri
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse.Users), nil
+	return keycloakResponseToUsers(unmarshaledResponse), nil
 }
 
 func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token string, q models.UserV3Query, usersByBody models.UsersByBody) (models.Users, error) {
@@ -89,7 +89,7 @@ func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token st
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse.Users), nil
+	return keycloakResponseToUsers(unmarshaledResponse), nil
 }
 
 func (userService *UserServiceClient) sendKeycloakGetRequest(url *url.URL, token string) ([]byte, error) {
@@ -217,10 +217,10 @@ func createUsernamesQuery(usernames []string) string {
 	return usernameQuery
 }
 
-func keycloakResponseToUsers(r []models.KeycloakResponse) models.Users {
-	users := models.Users{Users: []models.User{}}
+func keycloakResponseToUsers(r models.KeycloakResponses) models.Users {
+	users := models.Users{UserCount: r.Meta.Total, Users: []models.User{}}
 
-	for _, response := range r {
+	for _, response := range r.Users {
 		users.AddUser(models.User{
 			Username:      response.Username,
 			ID:            response.ID,
