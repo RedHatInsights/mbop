@@ -108,7 +108,7 @@ func UsersV1Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		sendJSON(w, u.Users)
+		sendJSON(w, u)
 		return
 	default:
 		// mbop server instance injected somewhere

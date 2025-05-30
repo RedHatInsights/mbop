@@ -121,7 +121,7 @@ func AccountsV3UsersHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		sendJSON(w, u.Users) // usersToV3Response()
+		sendJSON(w, u) // usersToV3Response()
 	default:
 		// mbop server instance injected somewhere
 		// pass right through to the current handler
