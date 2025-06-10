@@ -145,7 +145,7 @@ func AccountsV3UsersByHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(u.Users) == 1 {
-			sendJSON(w, u.Users)
+			sendJSON(w, u.Users[0])
 			return
 		}
 
