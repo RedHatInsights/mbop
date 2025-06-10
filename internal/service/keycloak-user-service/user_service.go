@@ -67,7 +67,7 @@ func (userService *UserServiceClient) GetAccountV3Users(orgID string, token stri
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse), err
+	return keycloakResponseToUsers(unmarshaledResponse), nil
 }
 
 func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token string, q models.UserV3Query, usersByBody models.UsersByBody) (models.Users, error) {
@@ -89,7 +89,7 @@ func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token st
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse), err
+	return keycloakResponseToUsers(unmarshaledResponse), nil
 }
 
 func (userService *UserServiceClient) sendKeycloakGetRequest(url *url.URL, token string) ([]byte, error) {
