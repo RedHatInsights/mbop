@@ -121,6 +121,11 @@ func AccountsV3UsersHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		if u.UserCount == 1 {
+			sendJSON(w, u.Users)
+			return
+		}
+
 		sendJSON(w, u) // usersToV3Response()
 	default:
 		// mbop server instance injected somewhere
