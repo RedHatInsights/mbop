@@ -218,6 +218,29 @@ func createUsernamesQuery(usernames []string) string {
 }
 
 func keycloakResponseToUsers(r models.KeycloakResponses) models.Users {
+	// If we have exactly one user, return just that user without the count
+	if len(r.Users) == 1 {
+		user := r.Users[0]
+		return models.Users{
+			Users: []models.User{{
+				Username:      user.Username,
+				ID:            user.ID,
+				Email:         user.Email,
+				FirstName:     user.FirstName,
+				LastName:      user.LastName,
+				AddressString: "",
+				IsActive:      user.IsActive,
+				IsInternal:    user.IsInternal,
+				Locale:        "en_US",
+				OrgID:         user.OrgID,
+				DisplayName:   user.UserID,
+				Type:          user.Type,
+				IsOrgAdmin:    user.IsOrgAdmin,
+			}},
+		}
+	}
+
+	// For multiple users, include the count
 	users := models.Users{UserCount: r.Meta.Total, Users: []models.User{}}
 
 	for _, response := range r.Users {
