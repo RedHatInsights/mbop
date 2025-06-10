@@ -122,7 +122,7 @@ func AccountsV3UsersHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(u.Users) == 1 {
-			sendJSON(w, u.Users[0])
+			sendJSON(w, u.Users)
 			return
 		}
 
