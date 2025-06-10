@@ -108,6 +108,11 @@ func UsersV1Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if u.UserCount == 1 {
+			sendJSON(w, u.Users)
+			return
+		}
+
 		sendJSON(w, u)
 		return
 	default:
