@@ -45,7 +45,15 @@ func (userService *UserServiceClient) GetUsers(token string, u models.UserBody, 
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse), err
+	result := keycloakResponseToUsers(unmarshaledResponse)
+	switch v := result.(type) {
+	case models.Users:
+		return v, nil
+	case []models.User:
+		return models.Users{Users: v}, nil
+	default:
+		return users, fmt.Errorf("unexpected response type from keycloakResponseToUsers")
+	}
 }
 
 func (userService *UserServiceClient) GetAccountV3Users(orgID string, token string, q models.UserV3Query) (models.Users, error) {
@@ -67,7 +75,15 @@ func (userService *UserServiceClient) GetAccountV3Users(orgID string, token stri
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse), nil
+	result := keycloakResponseToUsers(unmarshaledResponse)
+	switch v := result.(type) {
+	case models.Users:
+		return v, nil
+	case []models.User:
+		return models.Users{Users: v}, nil
+	default:
+		return users, fmt.Errorf("unexpected response type from keycloakResponseToUsers")
+	}
 }
 
 func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token string, q models.UserV3Query, usersByBody models.UsersByBody) (models.Users, error) {
@@ -89,7 +105,15 @@ func (userService *UserServiceClient) GetAccountV3UsersBy(orgID string, token st
 		return users, err
 	}
 
-	return keycloakResponseToUsers(unmarshaledResponse), nil
+	result := keycloakResponseToUsers(unmarshaledResponse)
+	switch v := result.(type) {
+	case models.Users:
+		return v, nil
+	case []models.User:
+		return models.Users{Users: v}, nil
+	default:
+		return users, fmt.Errorf("unexpected response type from keycloakResponseToUsers")
+	}
 }
 
 func (userService *UserServiceClient) sendKeycloakGetRequest(url *url.URL, token string) ([]byte, error) {
@@ -217,27 +241,25 @@ func createUsernamesQuery(usernames []string) string {
 	return usernameQuery
 }
 
-func keycloakResponseToUsers(r models.KeycloakResponses) models.Users {
-	// If we have exactly one user, return just that user without the count
+func keycloakResponseToUsers(r models.KeycloakResponses) interface{} {
+	// If we have exactly one user, return just the array
 	if len(r.Users) == 1 {
 		user := r.Users[0]
-		return models.Users{
-			Users: []models.User{{
-				Username:      user.Username,
-				ID:            user.ID,
-				Email:         user.Email,
-				FirstName:     user.FirstName,
-				LastName:      user.LastName,
-				AddressString: "",
-				IsActive:      user.IsActive,
-				IsInternal:    user.IsInternal,
-				Locale:        "en_US",
-				OrgID:         user.OrgID,
-				DisplayName:   user.UserID,
-				Type:          user.Type,
-				IsOrgAdmin:    user.IsOrgAdmin,
-			}},
-		}
+		return []models.User{{
+			Username:      user.Username,
+			ID:            user.ID,
+			Email:         user.Email,
+			FirstName:     user.FirstName,
+			LastName:      user.LastName,
+			AddressString: "",
+			IsActive:      user.IsActive,
+			IsInternal:    user.IsInternal,
+			Locale:        "en_US",
+			OrgID:         user.OrgID,
+			DisplayName:   user.UserID,
+			Type:          user.Type,
+			IsOrgAdmin:    user.IsOrgAdmin,
+		}}
 	}
 
 	// For multiple users, include the count
