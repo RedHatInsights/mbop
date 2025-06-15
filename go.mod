@@ -15,7 +15,7 @@ require (
 	github.com/go-logr/zapr v1.2.3
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/golang-migrate/migrate/v4 v4.15.2
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgconn v1.14.3
 	github.com/openshift-online/ocm-sdk-go v0.1.460
 	github.com/pkg/errors v0.9.1
@@ -82,7 +82,6 @@ require (
 	golang.org/x/net v0.38.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
