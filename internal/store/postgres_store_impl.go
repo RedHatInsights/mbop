@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"encoding/json"
+	"net"
 	"time"
 
 	// the pgx driver for the database
@@ -173,20 +174,40 @@ func scanRegistration(row scanner) (*Registration, error) {
 }
 
 func (p *postgresStore) AllowedIP(ip string, orgID string) (bool, error) {
-	// turns out postgres can do this on the backend! see old code that accomplishes the same thing at commit dca8f2c
-
-	// basically its doing a subquery selecting all blocks from the org or
-	// 'system' (old hardcoded ones) and then shoving them into an array and
-	// checking if the ip exists in those blocks.
-	row := p.db.QueryRow(`select $1::inet << any(array(select ip_block from allowlist where org_id = $2 or org_id = 'system')::inet[])`, ip, orgID)
-
-	var valid bool
-	err := row.Scan(&valid)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	// selecting all of the rows that are allowlisted for the current org_id
+	// AND
+	// the ones that have the special `system` org_id -> this is from the migration from terraform.
+	rows, err := p.db.Query(`select ip_block from allowlist where org_id = $1 or org_id = 'system'`, orgID)
+	if err != nil {
 		return false, err
 	}
+	defer rows.Close()
 
-	return valid, nil
+	var blocks []string
+	for rows.Next() {
+		var block string
+		err := rows.Scan(&block)
+		if err != nil {
+			return false, nil
+		}
+
+		blocks = append(blocks, block)
+	}
+
+	// Loop over blocks and see if they contain the IP
+	for _, block := range blocks {
+		_, ipnet, err := net.ParseCIDR(block)
+		if err != nil {
+			return false, err
+		}
+
+		// also trusting that the forwarded-for header is a "real" ip since it is set by the gateway
+		if ipnet.Contains(net.ParseIP(ip)) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (p *postgresStore) AllowAddress(ip *AllowlistBlock) error {
