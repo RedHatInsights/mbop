@@ -288,7 +288,7 @@ func (suite *TestSuite) TestIPAllowedHappyMultiple() {
 		OrgID:   "1234",
 	}))
 
-	for _, ip := range []string{"10.0.0.100", "192.168.1.100", "10.0.0.20/32", "192.168.1.20/32"} {
+	for _, ip := range []string{"10.0.0.100", "192.168.1.100", "10.0.0.20", "192.168.1.20"} {
 		allowed, err := suite.store.AllowedIP(ip, "1234")
 		suite.True(allowed)
 		suite.Nil(err)
@@ -310,9 +310,29 @@ func (suite *TestSuite) TestIPAllowedWithSystem() {
 		OrgID:   "system",
 	}))
 
-	for _, ip := range []string{"10.0.0.100", "192.168.1.100", "10.0.0.20/32", "192.168.1.20/32"} {
+	for _, ip := range []string{"10.0.0.100", "192.168.1.100", "10.0.0.20", "192.168.1.20"} {
 		allowed, err := suite.store.AllowedIP(ip, "1234")
 		suite.True(allowed)
 		suite.Nil(err)
 	}
+}
+
+func (suite *TestSuite) TestSingleIPCIDR() {
+	config.Reset()
+	defer config.Reset()
+	os.Setenv("ALLOWLIST_ENABLED", "true")
+	defer os.Setenv("ALLOWLIST_ENABLED", "false")
+
+	suite.Nil(suite.store.AllowAddress(&AllowlistBlock{
+		IPBlock: "192.168.245.100/32",
+		OrgID:   "1234",
+	}))
+
+	allowed, err := suite.store.AllowedIP("192.168.245.100", "1234")
+	suite.True(allowed)
+	suite.Nil(err)
+
+	allowed, err = suite.store.AllowedIP("192.168.245.101", "1234")
+	suite.False(allowed)
+	suite.Nil(err)
 }
