@@ -95,8 +95,16 @@ func (u *Users) AddUser(user User) {
 	u.Users = append(u.Users, user)
 }
 
-func (u *Users) RemoveUser(index int) {
-	u.Users = append(u.Users[:index], u.Users[index+1:]...)
+// loop through the users and remove any that are not org-admin
+func (u *Users) RemoveNonOrgAdmins() {
+	filtered := make([]User, 0, len(u.Users))
+	for _, user := range u.Users {
+		if user.IsOrgAdmin {
+			filtered = append(filtered, user)
+		}
+	}
+
+	u.Users = filtered
 }
 
 func (r *UserV3Responses) AddV3Response(response UserV3Response) {
