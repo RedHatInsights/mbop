@@ -58,10 +58,11 @@ func AccountsV3UsersHandler(w http.ResponseWriter, r *http.Request) {
 				u.Users[i].IsOrgAdmin = response.IsOrgAdmin
 			} else {
 				user.IsOrgAdmin = false
-				if q.AdminOnly { // if admin_only return only the org_admins
-					u.RemoveUser(i)
-				}
 			}
+		}
+
+		if q.AdminOnly {
+			u.RemoveNonOrgAdmins()
 		}
 
 		r := usersToV3Response(u.Users)
@@ -114,11 +115,7 @@ func AccountsV3UsersHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if q.AdminOnly {
-			for i, user := range u.Users {
-				if !user.IsOrgAdmin {
-					u.RemoveUser(i)
-				}
-			}
+			u.RemoveNonOrgAdmins()
 		}
 
 		if u.UserCount == 1 {
