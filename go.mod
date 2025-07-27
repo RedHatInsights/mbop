@@ -20,7 +20,7 @@ require (
 	github.com/openshift-online/ocm-sdk-go v0.1.460
 	github.com/pkg/errors v0.9.1
 	github.com/redhatinsights/platform-go-middlewares v0.20.1-0.20230119152702-e3779317d1aa
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
 	golang.org/x/oauth2 v0.27.0
@@ -60,7 +60,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
-	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
+	github.com/lestrrat-go/blackmagic v1.0.3 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/jwx v1.2.29 // indirect
