@@ -1,6 +1,6 @@
 # Build the manager binary
 # https://catalog.redhat.com/software/containers/ubi9/go-toolset/61e5c00b4ec9945c18787690
-FROM registry.access.redhat.com/ubi9/go-toolset:1.24.6-1755529097 as builder
+FROM registry.access.redhat.com/ubi9/go-toolset:1.24.6-1760420453 as builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
