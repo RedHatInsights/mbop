@@ -17,7 +17,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.18.3
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgconn v1.14.3
-	github.com/openshift-online/ocm-sdk-go v0.1.474
+	github.com/openshift-online/ocm-sdk-go v0.1.485
 	github.com/pkg/errors v0.9.1
 	github.com/redhatinsights/platform-go-middlewares v1.0.0
 	github.com/stretchr/testify v1.10.0
@@ -71,8 +71,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
-	github.com/openshift-online/ocm-api-model/clientapi v0.0.429 // indirect
-	github.com/openshift-online/ocm-api-model/model v0.0.429 // indirect
+	github.com/openshift-online/ocm-api-model/clientapi v0.0.439 // indirect
+	github.com/openshift-online/ocm-api-model/model v0.0.439 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.23.0 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
