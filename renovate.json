@@ -1,16 +1,22 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "baseBranches": ["main"],
+    "baseBranchPatterns": [
+        "main"
+    ],
     "packageRules": [
         {
             "description": "Update Dockerfile base image",
-            "matchManagers": ["dockerfile"],
+            "matchManagers": [
+                "dockerfile"
+            ],
             "versioning": "redhat",
             "automerge": true
         },
         {
             "description": "Automerge Tekton manager updates",
-            "matchManagers": ["tekton"],
+            "matchManagers": [
+                "tekton"
+            ],
             "automerge": true
         }
     ]
