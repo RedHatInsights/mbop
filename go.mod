@@ -20,10 +20,10 @@ require (
 	github.com/openshift-online/ocm-sdk-go v0.1.474
 	github.com/pkg/errors v0.9.1
 	github.com/redhatinsights/platform-go-middlewares v1.0.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	go.uber.org/zap v1.27.0
 	golang.org/x/exp v0.0.0-20250813145105-42675adae3e6
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.32.0
 )
 
 require (
@@ -76,15 +76,16 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.23.0 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
-	github.com/prometheus/common v0.65.0 // indirect
+	github.com/prometheus/common v0.67.4 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/sys v0.35.0 // indirect
-	golang.org/x/text v0.28.0 // indirect
-	google.golang.org/protobuf v1.36.7 // indirect
+	go.yaml.in/yaml/v2 v2.4.3 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/net v0.46.0 // indirect
+	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
+	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
