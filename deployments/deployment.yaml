@@ -181,7 +181,7 @@ objects:
                 name: keycloak
                 key: client_id
                 optional: true
-          image: quay.io/cloudservices/mbop:${IMAGE_TAG}
+          image: ${IMAGE}:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           name: mbop
           ports:
@@ -235,6 +235,9 @@ parameters:
 - name: REPLICAS
   description: The number of replicas to use in the deployment
   value: '1'
+- name: IMAGE
+  description: Image name
+  value: quay.io/redhat-services-prod/hcc-fr-tenant/mbop/mbop
 - name: IMAGE_TAG
   description: Image tag
   required: true
