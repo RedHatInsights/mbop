@@ -49,9 +49,9 @@ type awsSESEmailer struct {
 	client *ses.Client
 }
 
-func (s *awsSESEmailer) SendEmail(ctx context.Context, email *models.Email) error {
+func (s *awsSESEmailer) SendEmail(ctx context.Context, email *models.Email, fromAddress string) error {
 	out, err := s.client.SendEmail(ctx, &ses.SendEmailInput{
-		FromEmailAddress: aws.String(config.Get().FromEmail),
+		FromEmailAddress: aws.String(fromAddress),
 		Destination: &sesTypes.Destination{
 			ToAddresses:  email.Recipients,
 			CcAddresses:  email.CcList,
