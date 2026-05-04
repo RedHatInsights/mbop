@@ -7,7 +7,7 @@ import (
 	"time"
 
 	// the pgx driver for the database
-	_ "github.com/golang-migrate/migrate/v4/database/pgx"
+	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/pkg/errors"
 	l "github.com/redhatinsights/mbop/internal/logger"
