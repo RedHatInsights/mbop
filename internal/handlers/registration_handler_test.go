@@ -11,7 +11,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/config"
 	"github.com/redhatinsights/mbop/internal/logger"
 	"github.com/redhatinsights/mbop/internal/store"
@@ -242,15 +241,12 @@ func (suite *RegistrationTestSuite) TestSuccessfulRegistrationDelete() {
 	_, err := suite.store.Create(&store.Registration{UID: "abc1234", OrgID: "1234"})
 	suite.Nil(err)
 
-	rctx := chi.NewRouteContext()
-	rctx.URLParams.Add("uid", "abc1234")
-
-	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/{uid}", nil)
+	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/abc1234", nil)
+	req.SetPathValue("uid", "abc1234")
 	req = req.WithContext(context.WithValue(context.Background(), identity.Key, identity.XRHID{Identity: identity.Identity{
 		User:  identity.User{OrgAdmin: true, Username: "foobar"},
 		OrgID: "1234",
 	}}))
-	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	req.Header.Set("x-rh-certauth-cn", "/CN=abc1234")
 
 	RegistrationDeleteHandler(suite.rec, req)
@@ -264,15 +260,12 @@ func (suite *RegistrationTestSuite) TestNotOrgAdminDelete() {
 	_, err := suite.store.Create(&store.Registration{UID: "abc1234", OrgID: "1234"})
 	suite.Nil(err)
 
-	rctx := chi.NewRouteContext()
-	rctx.URLParams.Add("uid", "abc1234")
-
-	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/{uid}", nil)
+	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/abc1234", nil)
+	req.SetPathValue("uid", "abc1234")
 	req = req.WithContext(context.WithValue(context.Background(), identity.Key, identity.XRHID{Identity: identity.Identity{
 		User:  identity.User{OrgAdmin: false, Username: "foobar"},
 		OrgID: "1234",
 	}}))
-	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	req.Header.Set("x-rh-certauth-cn", "/CN=abc1234")
 
 	RegistrationDeleteHandler(suite.rec, req)
@@ -283,15 +276,12 @@ func (suite *RegistrationTestSuite) TestNotOrgAdminDelete() {
 }
 
 func (suite *RegistrationTestSuite) TestRegistrationNotFoundDelete() {
-	rctx := chi.NewRouteContext()
-	rctx.URLParams.Add("uid", "abc1234")
-
-	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/{uid}", nil)
+	req := httptest.NewRequest(http.MethodDelete, "http://foobar/registrations/abc1234", nil)
+	req.SetPathValue("uid", "abc1234")
 	req = req.WithContext(context.WithValue(context.Background(), identity.Key, identity.XRHID{Identity: identity.Identity{
 		User:  identity.User{OrgAdmin: true, Username: "foobar"},
 		OrgID: "1234",
 	}}))
-	req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 	req.Header.Set("x-rh-certauth-cn", "/CN=abc1234")
 
 	RegistrationDeleteHandler(suite.rec, req)

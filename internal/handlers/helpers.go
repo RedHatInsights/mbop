@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
 	l "github.com/redhatinsights/mbop/internal/logger"
 	"github.com/redhatinsights/mbop/internal/models"
 )
@@ -167,7 +166,7 @@ func getUsersByBody(r *http.Request) (models.UsersByBody, error) {
 }
 
 func getOrgIDFromPath(r *http.Request) string {
-	return chi.URLParam(r, "orgID")
+	return r.PathValue("orgID")
 }
 
 func getSortOrder(r *http.Request) (string, error) {

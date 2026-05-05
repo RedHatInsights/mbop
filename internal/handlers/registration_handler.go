@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/config"
 	"github.com/redhatinsights/mbop/internal/store"
 	"github.com/redhatinsights/platform-go-middlewares/identity"
@@ -155,7 +154,7 @@ func RegistrationCreateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegistrationDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	uid := chi.URLParam(r, "uid")
+	uid := r.PathValue("uid")
 	if uid == "" {
 		do400(w, "invalid uid passed in path")
 	}
