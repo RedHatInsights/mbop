@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/redhatinsights/mbop/internal/service/mailer"
 	"github.com/redhatinsights/platform-go-middlewares/identity"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/handlers"
 	l "github.com/redhatinsights/mbop/internal/logger"
 	"github.com/redhatinsights/mbop/internal/middleware"
@@ -29,33 +29,33 @@ func main() {
 		panic(err)
 	}
 
-	r := chi.NewRouter()
-	// Emulating the log message at the beginning of mainHandler()
-	r.Use(middleware.Logging)
+	mux := http.NewServeMux()
 
-	// TODO: move these to actual handler functions as we figure out which paths
-	// are get vs post
-	r.Get("/", handlers.Status)
-	r.Get("/v*", handlers.CatchAll)
-	r.Post("/v*", handlers.CatchAll)
-	r.Get("/api/entitlements*", handlers.CatchAll)
-	r.Get("/v1/jwt", handlers.JWTV1Handler)
-	r.Post("/v1/users", handlers.UsersV1Handler)
-	r.Post("/v1/sendEmails", handlers.SendEmails)
-	r.Get("/v3/accounts/{orgID}/users", handlers.AccountsV3UsersHandler)
-	r.Post("/v3/accounts/{orgID}/usersBy", handlers.AccountsV3UsersByHandler)
-	r.Get("/v1/auth", handlers.AuthV1Handler)
+	mux.HandleFunc("GET /{$}", handlers.Status)
+	mux.HandleFunc("GET /v1/jwt", handlers.JWTV1Handler)
+	mux.HandleFunc("POST /v1/users", handlers.UsersV1Handler)
+	mux.HandleFunc("POST /v1/sendEmails", handlers.SendEmails)
+	mux.HandleFunc("GET /v3/accounts/{orgID}/users", handlers.AccountsV3UsersHandler)
+	mux.HandleFunc("POST /v3/accounts/{orgID}/usersBy", handlers.AccountsV3UsersByHandler)
+	mux.HandleFunc("GET /v1/auth", handlers.AuthV1Handler)
 
 	// all the handlers that need xrhid
-	r.With(identity.EnforceIdentity).Group(func(r chi.Router) {
-		r.Get("/v1/registrations", handlers.RegistrationListHandler)
-		r.Post("/v1/registrations", handlers.RegistrationCreateHandler)
-		r.Delete("/v1/registrations/{uid}", handlers.RegistrationDeleteHandler)
-		r.Get("/v1/registrations/token", handlers.TokenHandler)
+	mux.HandleFunc("GET /v1/registrations", withIdentity(handlers.RegistrationListHandler))
+	mux.HandleFunc("POST /v1/registrations", withIdentity(handlers.RegistrationCreateHandler))
+	mux.HandleFunc("DELETE /v1/registrations/{uid}", withIdentity(handlers.RegistrationDeleteHandler))
+	mux.HandleFunc("GET /v1/registrations/token", withIdentity(handlers.TokenHandler))
 
-		r.Get("/api/mbop/v1/allowlist", handlers.AllowlistListHandler)
-		r.Post("/api/mbop/v1/allowlist", handlers.AllowlistCreateHandler)
-		r.Delete("/api/mbop/v1/allowlist", handlers.AllowlistDeleteHandler)
+	mux.HandleFunc("GET /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistListHandler))
+	mux.HandleFunc("POST /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistCreateHandler))
+	mux.HandleFunc("DELETE /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistDeleteHandler))
+
+	// Catch-all handler for /v* and /api/entitlements*
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/v") || strings.HasPrefix(r.URL.Path, "/api/entitlements") {
+			handlers.CatchAll(w, r)
+			return
+		}
+		http.NotFound(w, r)
 	})
 
 	err := mailer.InitConfig()
@@ -68,11 +68,14 @@ func main() {
 	interrupts := make(chan os.Signal, 1)
 	signal.Notify(interrupts, os.Interrupt, syscall.SIGTERM)
 
+	// Wrap mux with logging middleware
+	handler := middleware.Logging(mux)
+
 	go func() {
 		srv := http.Server{
 			Addr:              ":" + conf.Port,
 			ReadHeaderTimeout: 2 * time.Second,
-			Handler:           r,
+			Handler:           handler,
 		}
 
 		l.Log.Info("Starting MBOP HTTP Listener", "port", conf.Port)
@@ -86,7 +89,7 @@ func main() {
 			srv := http.Server{
 				Addr:              ":" + conf.TLSPort,
 				ReadHeaderTimeout: 2 * time.Second,
-				Handler:           r,
+				Handler:           handler,
 			}
 
 			l.Log.Info("Starting MBOP HTTPS Listener", "port", conf.TLSPort)
@@ -97,4 +100,8 @@ func main() {
 	}
 
 	<-interrupts
+}
+
+func withIdentity(h http.HandlerFunc) http.HandlerFunc {
+	return identity.EnforceIdentity(h).ServeHTTP
 }
