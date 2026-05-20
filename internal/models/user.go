@@ -2,7 +2,7 @@ package models
 
 type Users struct {
 	UserCount int    `json:"userCount"`
-	Users     []User `json:"users,omitempty"`
+	Users     []User `json:"users"`
 }
 
 type UserV3Responses struct {
