@@ -6,7 +6,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/config"
 )
 
@@ -25,8 +24,8 @@ func TestSendJSONWithStatusCodeContentTypeHeader(t *testing.T) {
 
 	config.Get().UsersModule = "mock"
 
-	testRouter := chi.NewRouter()
-	testRouter.Get("/v3/accounts/{orgID}/users", AccountsV3UsersHandler)
+	testRouter := http.NewServeMux()
+	testRouter.HandleFunc("GET /v3/accounts/{orgID}/users", AccountsV3UsersHandler)
 
 	testServer := httptest.NewServer(testRouter)
 	defer testServer.Close()
