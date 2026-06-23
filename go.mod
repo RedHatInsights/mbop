@@ -20,7 +20,7 @@ require (
 	github.com/redhatinsights/platform-go-middlewares v1.0.0
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/zap v1.27.0
-	golang.org/x/exp v0.0.0-20250813145105-42675adae3e6
+	golang.org/x/exp v0.0.0-20260611194520-c48552f49976
 	golang.org/x/oauth2 v0.33.0
 )
 
