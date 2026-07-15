@@ -8,14 +8,12 @@ import (
 	"time"
 
 	"github.com/redhatinsights/mbop/internal/config"
-	"github.com/redhatinsights/mbop/internal/service/mailer"
-	"github.com/redhatinsights/platform-go-middlewares/identity"
-
-	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/mbop/internal/handlers"
 	l "github.com/redhatinsights/mbop/internal/logger"
 	"github.com/redhatinsights/mbop/internal/middleware"
+	"github.com/redhatinsights/mbop/internal/service/mailer"
 	"github.com/redhatinsights/mbop/internal/store"
+	"github.com/redhatinsights/platform-go-middlewares/identity"
 )
 
 var conf = config.Get()
@@ -29,34 +27,32 @@ func main() {
 		panic(err)
 	}
 
-	r := chi.NewRouter()
-	// Emulating the log message at the beginning of mainHandler()
-	r.Use(middleware.Logging)
+	mux := http.NewServeMux()
 
-	// TODO: move these to actual handler functions as we figure out which paths
-	// are get vs post
-	r.Get("/", handlers.Status)
-	r.Get("/v*", handlers.CatchAll)
-	r.Post("/v*", handlers.CatchAll)
-	r.Get("/api/entitlements*", handlers.CatchAll)
-	r.Get("/v1/jwt", handlers.JWTV1Handler)
-	r.Post("/v1/users", handlers.UsersV1Handler)
-	r.Post("/v1/sendEmails", handlers.SendEmails)
-	r.Get("/v3/accounts/{orgID}/users", handlers.AccountsV3UsersHandler)
-	r.Post("/v3/accounts/{orgID}/usersBy", handlers.AccountsV3UsersByHandler)
-	r.Get("/v1/auth", handlers.AuthV1Handler)
+	withIdentity := func(h http.HandlerFunc) http.Handler {
+		return identity.EnforceIdentity(h)
+	}
 
-	// all the handlers that need xrhid
-	r.With(identity.EnforceIdentity).Group(func(r chi.Router) {
-		r.Get("/v1/registrations", handlers.RegistrationListHandler)
-		r.Post("/v1/registrations", handlers.RegistrationCreateHandler)
-		r.Delete("/v1/registrations/{uid}", handlers.RegistrationDeleteHandler)
-		r.Get("/v1/registrations/token", handlers.TokenHandler)
+	mux.HandleFunc("GET /{$}", handlers.Status)
+	mux.HandleFunc("GET /v1/jwt", handlers.JWTV1Handler)
+	mux.HandleFunc("POST /v1/users", handlers.UsersV1Handler)
+	mux.HandleFunc("POST /v1/sendEmails", handlers.SendEmails)
+	mux.HandleFunc("GET /v3/accounts/{orgID}/users", handlers.AccountsV3UsersHandler)
+	mux.HandleFunc("POST /v3/accounts/{orgID}/usersBy", handlers.AccountsV3UsersByHandler)
+	mux.HandleFunc("GET /v1/auth", handlers.AuthV1Handler)
+	mux.HandleFunc("GET /api/entitlements/{rest...}", handlers.CatchAll)
+	mux.HandleFunc("GET /{rest...}", handlers.CatchAll)
+	mux.HandleFunc("POST /{rest...}", handlers.CatchAll)
 
-		r.Get("/api/mbop/v1/allowlist", handlers.AllowlistListHandler)
-		r.Post("/api/mbop/v1/allowlist", handlers.AllowlistCreateHandler)
-		r.Delete("/api/mbop/v1/allowlist", handlers.AllowlistDeleteHandler)
-	})
+	mux.Handle("GET /v1/registrations", withIdentity(handlers.RegistrationListHandler))
+	mux.Handle("POST /v1/registrations", withIdentity(handlers.RegistrationCreateHandler))
+	mux.Handle("DELETE /v1/registrations/{uid}", withIdentity(handlers.RegistrationDeleteHandler))
+	mux.Handle("GET /v1/registrations/token", withIdentity(handlers.TokenHandler))
+	mux.Handle("GET /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistListHandler))
+	mux.Handle("POST /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistCreateHandler))
+	mux.Handle("DELETE /api/mbop/v1/allowlist", withIdentity(handlers.AllowlistDeleteHandler))
+
+	r := middleware.Logging(mux)
 
 	err := mailer.InitConfig()
 	if err != nil {
