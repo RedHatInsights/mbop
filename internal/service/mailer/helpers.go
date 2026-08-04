@@ -102,21 +102,18 @@ func LookupEmailsForUsernames(ctx context.Context, email *models.Email) error {
 
 	// ...and finally, replace the usernames -> in the lists on the email objects
 	for i, name := range email.Recipients {
-		if _, ok := toLookup[name]; ok {
-			email.Recipients = append(email.Recipients[:i], toLookup[name])
-			email.Recipients = append(email.Recipients, email.Recipients[i+1:]...)
+		if emailAddr, ok := toLookup[name]; ok {
+			email.Recipients[i] = emailAddr
 		}
 	}
 	for i, name := range email.CcList {
-		if _, ok := toLookup[name]; ok {
-			email.CcList = append(email.CcList[:i], toLookup[name])
-			email.CcList = append(email.CcList, email.CcList[i+1:]...)
+		if emailAddr, ok := toLookup[name]; ok {
+			email.CcList[i] = emailAddr
 		}
 	}
 	for i, name := range email.BccList {
-		if _, ok := toLookup[name]; ok {
-			email.BccList = append(email.BccList[:i], toLookup[name])
-			email.BccList = append(email.BccList, email.BccList[i+1:]...)
+		if emailAddr, ok := toLookup[name]; ok {
+			email.BccList[i] = emailAddr
 		}
 	}
 
