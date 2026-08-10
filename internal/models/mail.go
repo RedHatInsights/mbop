@@ -8,7 +8,10 @@ import (
 )
 
 type Emails struct {
-	Emails []Email `json:"emails,omitempty"`
+	Emails              []Email `json:"emails,omitempty"`
+	EmailSender         string  `json:"emailSender,omitempty"`
+	DefaultRecipient    string  `json:"defaultRecipient,omitempty"`
+	SkipUsersResolution bool    `json:"skipUsersResolution,omitempty"`
 }
 
 // taken from the BOP openapi spec
