@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build ./cmd/mbop/mbop.go
 
-FROM registry.access.redhat.com/ubi9-minimal:9.8-1786380870
+FROM registry.access.redhat.com/ubi9-minimal:9.8-1787647261
 
 WORKDIR /
 COPY --from=builder /workspace/mbop .
