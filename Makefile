@@ -19,4 +19,5 @@ lint:
 fix:
 	golangci-lint run --enable=errcheck,gocritic,gofmt,goimports,gosec,gosimple,govet,ineffassign,revive,staticcheck,typecheck,unused,bodyclose --fix=true --max-same-issues=20  --print-issued-lines=true --print-linter-name=true --sort-results=true
 
+
 .PHONY: build clean lint fix test run
