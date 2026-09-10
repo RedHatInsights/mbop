@@ -3,6 +3,7 @@ package ocm
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	sdk "github.com/openshift-online/ocm-sdk-go"
 	v1 "github.com/openshift-online/ocm-sdk-go/accountsmgmt/v1"
@@ -96,8 +97,13 @@ func (ocm *SDK) GetOrgAdmin(u []models.User) (models.OrgAdminResponse, error) {
 
 	bindingSlice := roleBindings.Items().Slice()
 	for _, binding := range bindingSlice {
-		orgAdminResponse[binding.Account().ID()] = models.OrgAdmin{
-			ID:         binding.Account().ID(),
+		id, err := strconv.Atoi(binding.Account().ID())
+		if err != nil {
+			continue
+		}
+
+		orgAdminResponse[id] = models.OrgAdmin{
+			ID:         id,
 			IsOrgAdmin: true,
 		}
 	}
@@ -166,9 +172,11 @@ func responseToUsers(response *v1.AccountsListResponse) models.Users {
 	items := response.Items().Slice()
 
 	for i := range items {
+		id, _ := strconv.Atoi(items[i].ID())
+
 		users.AddUser(models.User{
 			Username:      items[i].Username(),
-			ID:            items[i].ID(),
+			ID:            id,
 			Email:         items[i].Email(),
 			FirstName:     items[i].FirstName(),
 			LastName:      items[i].LastName(),
@@ -207,7 +215,7 @@ func createOrgAdminSearchString(users []models.User) string {
 			search += " or "
 		}
 
-		search += fmt.Sprintf("account.id='%s' and role.id='OrganizationAdmin'", users[i].ID)
+		search += fmt.Sprintf("account.id='%d' and role.id='OrganizationAdmin'", users[i].ID)
 	}
 
 	return search

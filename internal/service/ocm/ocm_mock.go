@@ -7,7 +7,6 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/redhatinsights/mbop/internal/models"
 )
 
@@ -34,9 +33,14 @@ func (ocm *SDKMock) GetUsers(u models.UserBody, _ models.UserV1Query) (models.Us
 			return users, err
 		}
 
+		idNum, err := rand.Int(rand.Reader, big.NewInt(999999))
+		if err != nil {
+			return users, err
+		}
+
 		users.AddUser(models.User{
 			Username:      user,
-			ID:            uuid.New().String(),
+			ID:            int(idNum.Int64()),
 			Email:         "lub@dub.com",
 			FirstName:     "test",
 			LastName:      "case",
@@ -56,11 +60,11 @@ func (ocm *SDKMock) GetUsers(u models.UserBody, _ models.UserV1Query) (models.Us
 func (ocm *SDKMock) GetOrgAdmin(users []models.User) (models.OrgAdminResponse, error) {
 	response := models.OrgAdminResponse{}
 
-	if users[0].ID == "23456" {
+	if users[0].ID == 23456 {
 		return response, nil
 	}
 
-	if users[0].ID == "errorTest" {
+	if users[0].Username == "errorTest" {
 		return response, fmt.Errorf("error retrieving Role Bindings")
 	}
 
@@ -91,9 +95,14 @@ func (ocm *SDKMock) GetAccountV3Users(orgID string, q models.UserV3Query) (model
 			return users, err
 		}
 
+		idNum, err := rand.Int(rand.Reader, big.NewInt(999999))
+		if err != nil {
+			return users, err
+		}
+
 		users.AddUser(models.User{
 			Username:      "TestUser" + strconv.Itoa(int(displayNameNum.Int64())),
-			ID:            uuid.New().String(),
+			ID:            int(idNum.Int64()),
 			Email:         "lub@dub.com",
 			FirstName:     "test",
 			LastName:      "case",
@@ -127,9 +136,14 @@ func (ocm *SDKMock) GetAccountV3UsersBy(orgID string, q models.UserV3Query, _ mo
 			return users, err
 		}
 
+		idNum, err := rand.Int(rand.Reader, big.NewInt(999999))
+		if err != nil {
+			return users, err
+		}
+
 		users.AddUser(models.User{
 			Username:      "TestUser" + strconv.Itoa(int(displayNameNum.Int64())),
-			ID:            uuid.New().String(),
+			ID:            int(idNum.Int64()),
 			Email:         "lub@dub.com",
 			FirstName:     "test",
 			LastName:      "case",

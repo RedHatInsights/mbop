@@ -20,15 +20,15 @@ func TestUsers_RemoveNonOrgAdmins(t *testing.T) {
 			fields: fields{
 				UserCount: 4,
 				Users: []User{
-					{Username: "admin1", ID: "1", IsOrgAdmin: true},
-					{Username: "user1", ID: "2", IsOrgAdmin: false},
-					{Username: "admin2", ID: "3", IsOrgAdmin: true},
-					{Username: "user2", ID: "4", IsOrgAdmin: false},
+					{Username: "admin1", ID: 1, IsOrgAdmin: true},
+					{Username: "user1", ID: 2, IsOrgAdmin: false},
+					{Username: "admin2", ID: 3, IsOrgAdmin: true},
+					{Username: "user2", ID: 4, IsOrgAdmin: false},
 				},
 			},
 			expectedUsers: []User{
-				{Username: "admin1", ID: "1", IsOrgAdmin: true},
-				{Username: "admin2", ID: "3", IsOrgAdmin: true},
+				{Username: "admin1", ID: 1, IsOrgAdmin: true},
+				{Username: "admin2", ID: 3, IsOrgAdmin: true},
 			},
 			expectedCount: 2,
 		},
@@ -37,15 +37,15 @@ func TestUsers_RemoveNonOrgAdmins(t *testing.T) {
 			fields: fields{
 				UserCount: 3,
 				Users: []User{
-					{Username: "admin1", ID: "1", IsOrgAdmin: true},
-					{Username: "admin2", ID: "2", IsOrgAdmin: true},
-					{Username: "admin3", ID: "3", IsOrgAdmin: true},
+					{Username: "admin1", ID: 1, IsOrgAdmin: true},
+					{Username: "admin2", ID: 2, IsOrgAdmin: true},
+					{Username: "admin3", ID: 3, IsOrgAdmin: true},
 				},
 			},
 			expectedUsers: []User{
-				{Username: "admin1", ID: "1", IsOrgAdmin: true},
-				{Username: "admin2", ID: "2", IsOrgAdmin: true},
-				{Username: "admin3", ID: "3", IsOrgAdmin: true},
+				{Username: "admin1", ID: 1, IsOrgAdmin: true},
+				{Username: "admin2", ID: 2, IsOrgAdmin: true},
+				{Username: "admin3", ID: 3, IsOrgAdmin: true},
 			},
 			expectedCount: 3,
 		},
@@ -54,8 +54,8 @@ func TestUsers_RemoveNonOrgAdmins(t *testing.T) {
 			fields: fields{
 				UserCount: 2,
 				Users: []User{
-					{Username: "user1", ID: "1", IsOrgAdmin: false},
-					{Username: "user2", ID: "2", IsOrgAdmin: false},
+					{Username: "user1", ID: 1, IsOrgAdmin: false},
+					{Username: "user2", ID: 2, IsOrgAdmin: false},
 				},
 			},
 			expectedUsers: []User{},
@@ -75,11 +75,11 @@ func TestUsers_RemoveNonOrgAdmins(t *testing.T) {
 			fields: fields{
 				UserCount: 1,
 				Users: []User{
-					{Username: "admin1", ID: "1", IsOrgAdmin: true},
+					{Username: "admin1", ID: 1, IsOrgAdmin: true},
 				},
 			},
 			expectedUsers: []User{
-				{Username: "admin1", ID: "1", IsOrgAdmin: true},
+				{Username: "admin1", ID: 1, IsOrgAdmin: true},
 			},
 			expectedCount: 1,
 		},
@@ -88,7 +88,7 @@ func TestUsers_RemoveNonOrgAdmins(t *testing.T) {
 			fields: fields{
 				UserCount: 1,
 				Users: []User{
-					{Username: "user1", ID: "1", IsOrgAdmin: false},
+					{Username: "user1", ID: 1, IsOrgAdmin: false},
 				},
 			},
 			expectedUsers: []User{},
