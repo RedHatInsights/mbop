@@ -24,7 +24,7 @@ type KeycloakMetadata struct {
 
 type User struct {
 	Username      string `json:"username"`
-	ID            string `json:"id"`
+	ID            int    `json:"id"`
 	Email         string `json:"email"`
 	FirstName     string `json:"first_name"`
 	LastName      string `json:"last_name"`
@@ -58,7 +58,7 @@ type KeycloakResponse struct {
 }
 
 type UserV3Response struct {
-	ID         string `json:"id"`
+	ID         int    `json:"id"`
 	Username   string `json:"username"`
 	Email      string `json:"email"`
 	FirstName  string `json:"first_name"`
