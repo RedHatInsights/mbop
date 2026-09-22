@@ -1,6 +1,6 @@
 module github.com/redhatinsights/mbop
 
-go 1.25.0
+go 1.26.0
 
 require (
 	github.com/RedHatInsights/jwk2pem v0.0.0-20230131125756-f780f7dad7d8
@@ -20,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/zap v1.28.0
 	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 )
 
 require (
