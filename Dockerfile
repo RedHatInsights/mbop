@@ -1,6 +1,6 @@
 # Build the manager binary
 # https://catalog.redhat.com/software/containers/ubi9/go-toolset/61e5c00b4ec9945c18787690
-FROM registry.access.redhat.com/ubi9/go-toolset:9.8-1790174511 as builder
+FROM registry.access.redhat.com/ubi9/go-toolset:9.8-1791275853 as builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build ./cmd/mbop/mbop.go
 
-FROM registry.access.redhat.com/ubi9-minimal:9.8-1790074235
+FROM registry.access.redhat.com/ubi9-minimal:9.8-1791279563
 
 WORKDIR /
 COPY --from=builder /workspace/mbop .
