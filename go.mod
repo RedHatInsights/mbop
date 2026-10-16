@@ -2,6 +2,8 @@ module github.com/redhatinsights/mbop
 
 go 1.26.0
 
+toolchain go1.27.2
+
 require (
 	github.com/RedHatInsights/jwk2pem v0.0.0-20230131125756-f780f7dad7d8
 	github.com/aws/aws-sdk-go-v2 v1.42.1
