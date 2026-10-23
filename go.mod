@@ -15,7 +15,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/golang-migrate/migrate/v4 v4.20.1
 	github.com/jackc/pgx/v5 v5.11.0
-	github.com/openshift-online/ocm-sdk-go v0.1.517
+	github.com/openshift-online/ocm-sdk-go v0.1.519
 	github.com/pkg/errors v0.9.1
 	github.com/redhatinsights/platform-go-middlewares v1.0.0
 	github.com/stretchr/testify v1.12.1

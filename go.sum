@@ -189,8 +189,8 @@ github.com/openshift-online/ocm-api-model/clientapi v0.0.471 h1:bgmK+yzOrMnAkpK7
 github.com/openshift-online/ocm-api-model/clientapi v0.0.471/go.mod h1:fZwy5HY2URG9nrExvQeXrDU/08TGqZ16f8oymVEN5lo=
 github.com/openshift-online/ocm-api-model/model v0.0.471 h1:GGmbprtuBiE2/bHwTT1tMInKbaKTYHWgkipZerYafHQ=
 github.com/openshift-online/ocm-api-model/model v0.0.471/go.mod h1:PQIoq6P8Vlb7goOdRMLK8nJY+B7HH0RTqYAa4kyidTE=
-github.com/openshift-online/ocm-sdk-go v0.1.517 h1:79KiFTqWHds1FanFByIEqo/485VqXB7LHQiN8XOTdJw=
-github.com/openshift-online/ocm-sdk-go v0.1.517/go.mod h1:3rNVzZ86jRbpFtdQUqbdlxmpR+MhKs87szY45bLg3EI=
+github.com/openshift-online/ocm-sdk-go v0.1.519 h1:VqKF5BfydLMeLe4q+VTgNejPrPA2jsvaquinZKnNUF4=
+github.com/openshift-online/ocm-sdk-go v0.1.519/go.mod h1:XUHJnrFyl3iYPAQaTBYdPboHjfZl5Wt+QF9JuMRb95A=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
