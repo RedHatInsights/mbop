@@ -97,8 +97,8 @@ internals, database migration history, and key tradeoffs.
 
 ## Deployment
 
-Container images are built using a multi-stage Dockerfile based on UBI9 (`go-toolset` builder,
-`ubi9-minimal` runtime). The final image runs as non-root user `65532`.
+Container images are built using a multi-stage Dockerfile based on Red Hat Hardened Images
+(`hi/go` builder, distroless `hi/static` runtime). The final image runs as non-root user `65532`.
 
 Two image registries:
 
