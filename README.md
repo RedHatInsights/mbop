@@ -159,9 +159,9 @@ make fix
 
 ## Deployment
 
-Container images are built using a multi-stage [Dockerfile][dockerfile] based on UBI9. The builder
-stage uses `registry.access.redhat.com/ubi9/go-toolset` and the runtime stage uses
-`registry.access.redhat.com/ubi9-minimal`. The final image runs as non-root user `65532`.
+Container images are built using a multi-stage [Dockerfile][dockerfile] based on Red Hat Hardened
+Images. The builder stage uses `registry.access.redhat.com/hi/go` and the runtime stage uses
+`registry.access.redhat.com/hi/static` (distroless). The final image runs as non-root user `65532`.
 
 CI pushes images to `quay.io/cloudservices/mbop` (via `build_deploy.sh`) and
 `quay.io/redhat-user-workloads/hcc-fr-tenant/mbop/mbop` (via Tekton/Konflux pipelines).
