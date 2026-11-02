@@ -11,7 +11,7 @@ ENV GOTOOLCHAIN=auto
 RUN go mod download
 
 COPY --chown=65532:0 . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build ./cmd/mbop/mbop.go
+RUN CGO_ENABLED=0 go build ./cmd/mbop/mbop.go
 
 FROM registry.access.redhat.com/hi/static:1792647314@sha256:7e14ec7af494b367c780b040122a685071f73e1f766c28f4390ab9ed2fd4e333
 
