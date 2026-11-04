@@ -1,6 +1,6 @@
 # Build the manager binary
 # Red Hat Hardened Images: https://access.redhat.com/documentation/en-us/red_hat_hardened_images
-FROM registry.access.redhat.com/hi/go:1.26.10-builder@sha256:85077cb2c88f36cdbd7d15f705292e2a7162e68984ab5193f3a2e137c46d3884 AS builder
+FROM registry.access.redhat.com/hi/go:1.26.10-builder@sha256:0abd8cc156d3aa9d22c4fad74a1b95082b40722dc4c53fab4f8ebc7aeace5050 AS builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
