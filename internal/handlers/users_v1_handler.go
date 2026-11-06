@@ -14,6 +14,8 @@ func UsersV1Handler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	switch config.Get().UsersModule {
+	case "fixture":
+		fixtureUsers(w, r)
 	case amsModule, mockModule:
 		usernames, err := getUsernamesFromRequestBody(r)
 		if err != nil {

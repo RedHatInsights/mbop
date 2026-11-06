@@ -56,7 +56,7 @@ backend is used for each capability:
 
 | Variable        | Default | Options                            | Purpose                     |
 | --------------- | ------- | ---------------------------------- | --------------------------- |
-| `USERS_MODULE`  | (empty) | `ams`, `mock`, `keycloak`, or `""` | User lookup backend         |
+| `USERS_MODULE`  | (empty) | `ams`, `mock`, `fixture`, `keycloak`, or `""` | User lookup backend         |
 | `JWT_MODULE`    | (empty) | `aws`, `keycloak`, or `""`         | JWT/public-key backend      |
 | `MAILER_MODULE` | `print` | `aws`, `print`                     | Email delivery backend      |
 | `STORE_BACKEND` | `memory`| `memory`, `postgres`               | Persistence backend         |
@@ -176,3 +176,18 @@ No license file is currently present in this repository.
 [realm-template]: ./test/data/redhat-external-realm.json
 [golangci-lint]: https://golangci-lint.run/
 [dockerfile]: ./Dockerfile
+
+## CPT deterministic user fixtures (RHCLOUD-52599)
+
+Set `USERS_MODULE=fixture` and `USERS_FIXTURE_FILE=/etc/mbop/users.json`.
+The file is a JSON array of BOP user objects. An optional `lookup_id` matches
+an SSO JWT `sub`; the numeric `id` remains the returned BOP user ID.
+`POST /v1/users?queryBy=userId` returns only matching users, or `[]`.
+Missing/malformed fixture files fail closed. No Keycloak, AMS, BOP credentials,
+or database is needed. Other existing module behavior is unchanged.
+
+`deployments/perf-poc.yaml` deploys this mode as an internal-only service.
+Set `POC_SUBJECT_ID` to the subject of the stage SSO test token. The default
+`52599` is synthetic and is only useful with locally signed test tokens.
+No tokens or credentials belong in the fixture. Publish an image containing
+this change before enabling an app-interface target using this template.

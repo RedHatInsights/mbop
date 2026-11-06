@@ -1,0 +1,105 @@
+# RHCLOUD-52599: requires an image containing the fixture users module.
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: mbop-perf-poc
+parameters:
+- name: IMAGE
+  value: quay.io/cloudservices/mbop
+- name: IMAGE_TAG
+  required: true
+- name: POC_SUBJECT_ID
+  description: Exact stage SSO JWT sub; synthetic default is for local testing only
+  value: '52599'
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: mbop-users
+    annotations:
+      qontract.recycle: 'true'
+  data:
+    users.json: |-
+      [
+        {
+          "lookup_id": "${POC_SUBJECT_ID}",
+          "id": 52599,
+          "org_id": "52599",
+          "username": "cpt-user",
+          "account_number": "52599",
+          "email": "cpt-user@example.com",
+          "first_name": "CPT",
+          "last_name": "User",
+          "is_active": true,
+          "is_org_admin": false,
+          "is_internal": false,
+          "locale": "en_US"
+        }
+      ]
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: mbop
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: mbop
+    template:
+      metadata:
+        labels:
+          app: mbop
+      spec:
+        containers:
+        - name: mbop
+          image: ${IMAGE}:${IMAGE_TAG}
+          env:
+          - name: USERS_MODULE
+            value: fixture
+          - name: USERS_FIXTURE_FILE
+            value: /etc/mbop/users.json
+          - name: STORE_BACKEND
+            value: memory
+          - name: MAILER_MODULE
+            value: print
+          - name: DISABLE_CATCHALL
+            value: 'true'
+          - name: PORT
+            value: '8090'
+          ports:
+          - name: http
+            containerPort: 8090
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: '1'
+              memory: 512Mi
+          volumeMounts:
+          - name: users
+            mountPath: /etc/mbop
+            readOnly: true
+        volumes:
+        - name: users
+          configMap:
+            name: mbop-users
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: mbop
+  spec:
+    selector:
+      app: mbop
+    ports:
+    - name: http
+      port: 8090
+      targetPort: http

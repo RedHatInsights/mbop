@@ -14,6 +14,7 @@ type MbopConfig struct {
 	MailerModule           string
 	JwtModule              string
 	JwkURL                 string
+	UsersFixtureFile       string
 	UsersModule            string
 	CognitoAppClientID     string
 	CognitoAppClientSecret string
@@ -76,16 +77,17 @@ func Get() *MbopConfig {
 	}
 
 	c := &MbopConfig{
-		UsersModule:     fetchWithDefault("USERS_MODULE", ""),
-		JwtModule:       fetchWithDefault("JWT_MODULE", ""),
-		JwkURL:          fetchWithDefault("JWK_URL", ""),
-		MailerModule:    fetchWithDefault("MAILER_MODULE", "print"),
-		FromEmail:       fetchWithDefault("FROM_EMAIL", "no-reply@redhat.com"),
-		ToEmail:         fetchWithDefault("TO_EMAIL", "no-reply@redhat.com"),
-		SESRegion:       fetchWithDefault("SES_REGION", "us-east-1"),
-		SESAccessKey:    fetchWithDefault("SES_ACCESS_KEY", ""),
-		SESSecretKey:    fetchWithDefault("SES_SECRET_KEY", ""),
-		DisableCatchall: disableCatchAll,
+		UsersFixtureFile: fetchWithDefault("USERS_FIXTURE_FILE", ""),
+		UsersModule:      fetchWithDefault("USERS_MODULE", ""),
+		JwtModule:        fetchWithDefault("JWT_MODULE", ""),
+		JwkURL:           fetchWithDefault("JWK_URL", ""),
+		MailerModule:     fetchWithDefault("MAILER_MODULE", "print"),
+		FromEmail:        fetchWithDefault("FROM_EMAIL", "no-reply@redhat.com"),
+		ToEmail:          fetchWithDefault("TO_EMAIL", "no-reply@redhat.com"),
+		SESRegion:        fetchWithDefault("SES_REGION", "us-east-1"),
+		SESAccessKey:     fetchWithDefault("SES_ACCESS_KEY", ""),
+		SESSecretKey:     fetchWithDefault("SES_SECRET_KEY", ""),
+		DisableCatchall:  disableCatchAll,
 
 		DatabaseHost:     fetchWithDefault("DATABASE_HOST", "localhost"),
 		DatabasePort:     fetchWithDefault("DATABASE_PORT", "5432"),
