@@ -185,8 +185,8 @@ github.com/opencontainers/go-digest v1.0.0 h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8
 github.com/opencontainers/go-digest v1.0.0/go.mod h1:0JzlMkj0TRzQZfJkVvzbP0HBR3IKzErnv2BNG4W4MAM=
 github.com/opencontainers/image-spec v1.1.1 h1:y0fUlFfIZhPF1W537XOLg0/fcx6zcHCJwooC2xJA040=
 github.com/opencontainers/image-spec v1.1.1/go.mod h1:qpqAh3Dmcf36wStyyWU+kCeDgrGnAve2nCC8+7h8Q0M=
-github.com/openshift-online/ocm-api-model/clientapi v0.0.471 h1:bgmK+yzOrMnAkpK7iBqaJG3b0IkSGTfzKrczvsZ9tY4=
-github.com/openshift-online/ocm-api-model/clientapi v0.0.471/go.mod h1:fZwy5HY2URG9nrExvQeXrDU/08TGqZ16f8oymVEN5lo=
+github.com/openshift-online/ocm-api-model/clientapi v0.0.473 h1:M9q3cAbJXUqsjyLczvBGa7TZxSOZKkQOf7WIvEYTQcQ=
+github.com/openshift-online/ocm-api-model/clientapi v0.0.473/go.mod h1:fZwy5HY2URG9nrExvQeXrDU/08TGqZ16f8oymVEN5lo=
 github.com/openshift-online/ocm-api-model/model v0.0.471 h1:GGmbprtuBiE2/bHwTT1tMInKbaKTYHWgkipZerYafHQ=
 github.com/openshift-online/ocm-api-model/model v0.0.471/go.mod h1:PQIoq6P8Vlb7goOdRMLK8nJY+B7HH0RTqYAa4kyidTE=
 github.com/openshift-online/ocm-sdk-go v0.1.517 h1:79KiFTqWHds1FanFByIEqo/485VqXB7LHQiN8XOTdJw=
