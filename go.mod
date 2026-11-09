@@ -63,7 +63,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/openshift-online/ocm-api-model/clientapi v0.0.471 // indirect
-	github.com/openshift-online/ocm-api-model/model v0.0.471 // indirect
+	github.com/openshift-online/ocm-api-model/model v0.0.473 // indirect
 	github.com/prometheus/client_golang v1.25.0 // indirect
 	github.com/prometheus/client_model v0.6.3 // indirect
 	github.com/prometheus/common v0.72.1 // indirect
