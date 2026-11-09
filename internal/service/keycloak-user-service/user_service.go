@@ -221,11 +221,9 @@ func keycloakResponseToUsers(r models.KeycloakResponses) models.Users {
 	users := models.Users{UserCount: r.Meta.Total, Users: []models.User{}}
 
 	for _, response := range r.Users {
-		id, _ := strconv.Atoi(response.ID)
-
 		users.AddUser(models.User{
 			Username:      response.Username,
-			ID:            id,
+			ID:            response.ID,
 			Email:         response.Email,
 			FirstName:     response.FirstName,
 			LastName:      response.LastName,
