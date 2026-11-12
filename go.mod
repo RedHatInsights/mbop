@@ -2,7 +2,7 @@ module github.com/redhatinsights/mbop
 
 go 1.26.0
 
-toolchain go1.27.2
+toolchain go1.27.4
 
 require (
 	github.com/RedHatInsights/jwk2pem v0.0.0-20230131125756-f780f7dad7d8
@@ -14,6 +14,7 @@ require (
 	github.com/go-logr/zapr v1.3.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/golang-migrate/migrate/v4 v4.20.1
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/openshift-online/ocm-sdk-go v0.1.517
 	github.com/pkg/errors v0.9.1
@@ -44,7 +45,6 @@ require (
 	github.com/goccy/go-json v0.11.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/glog v1.2.5 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
