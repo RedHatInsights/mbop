@@ -21,7 +21,7 @@ require (
 	github.com/redhatinsights/platform-go-middlewares v1.0.0
 	github.com/stretchr/testify v1.12.1
 	go.uber.org/zap v1.28.0
-	golang.org/x/exp v0.0.0-20261014143641-f0251eb4aa3e
+	golang.org/x/exp v0.0.0-20261124000051-d6646c509b6d
 	golang.org/x/oauth2 v0.37.0
 )
 
@@ -77,7 +77,6 @@ require (
 	golang.org/x/sync v0.25.0 // indirect
 	golang.org/x/sys v0.50.0 // indirect
 	golang.org/x/text v0.44.0 // indirect
-  golang.org/x/net v0.62.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
